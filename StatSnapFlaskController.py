@@ -1,6 +1,7 @@
 import os
 from flask import Flask, flash, render_template,request, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
+import sqlite3
 
 UPLOAD_FOLDER = './db_upload'
 ALLOWED_EXTENSIONS = set(['db', 'png'])
@@ -12,10 +13,13 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/image_loaded/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
-                               filename)
+@app.route('/database_view/')
+def uploaded_file():
+    connection = sqlite3.connect("db_upload/chat.db")
+    cursor = connection.cursor()
+    cursor.execute("select id, text from message, handle where message.handle_id = handle.ROWID;")
+    results = cursor.fetchall()
+    return render_template("database_view.html", results = results)
 
 @app.route('/', methods = ['GET', 'POST'])
 def upload_file():
@@ -32,9 +36,8 @@ def upload_file():
             return render_template("index.html")
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            print(app.config['UPLOAD_FOLDER'])
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file', filename=filename))
+            return redirect(url_for('uploaded_file'))
         else:
             flash(msg)
 
