@@ -15,8 +15,14 @@ def allowed_file(filename):
 
 @app.route('/database_view/')
 def uploaded_file():
+    os.system("cd db_upload")
+    os.system("ls")
+    #os.system("sqlite3 chat.db")
+    #os.system(".exit")
     connection = sqlite3.connect("db_upload/chat.db")
     cursor = connection.cursor()
+    #cursor.execute("chat.db .dump > dump.txt")
+    #results = None
     cursor.execute("select id, text from message, handle where message.handle_id = handle.ROWID;")
     results = cursor.fetchall()
     return render_template("database_view.html", results = results)

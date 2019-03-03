@@ -44,17 +44,10 @@
                         <input class="file-path validate" type="text">
                      </div>
                   </div>
-                  <div class = "row">
-                    <div class = "col s2">
-                     <input class="btn blue darken-4 btn-large" type=submit value=Upload>
-                      </div>
-                    <div class = "col s2">
+                     <input class="btn blue darken-4 btn-large center-align" type=submit value=Upload>
                         {% for message in get_flashed_messages()%}
-                        <h6 class="red-text">{{ message }}</h6>
+                        <h6 class="red-text center-align">{{ message }}</h6>
                         {% endfor %}
-                    </div>
-
-                  </div>
                </form>
             </div>
             <br><br>
