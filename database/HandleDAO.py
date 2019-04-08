@@ -19,6 +19,11 @@ class HandleDAO(DAO):
         self.con.commit()
 
     def select(self, data):
-        command_string = "select HANDLE_ID, PHONE_NUMBER, USER_ID from HANDLE where USER_ID = :1;"
-        self.cur.execute(command_string, (str(data)))
+        command_string = "select HANDLE_ID, PHONE_NUMBER, USER_ID from HANDLE where USER_ID = :1 and HANDLE_ID = :2;"
+        self.cur.execute(command_string, (str(data[0]), str(data[1])))
+        self.con.commit()
+
+    def delete(self, data):
+        command_string = "delete * from HANDLE where USER_ID = :1 and HANDLE_ID = :2;"
+        self.cur.execute(command_string, (str(data[0]), str(data[1])))
         self.con.commit()
