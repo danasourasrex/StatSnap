@@ -25,47 +25,7 @@ def allowed_file(filename):
 @app.route('/database_view/')
 def uploaded_file():
 
-    connection = sqlite3.connect("db_upload/chat.db")
-    cursor = connection.cursor()
-    cursor.execute("select text, handle_id, is_from_me, date from message")
-    acceptable_messages = []
 
-
-    i = 0
-    for rows in cursor.fetchall():
-        if i == 120:
-            break
-        elif str(rows[1]) != "32" and "quiz" not in str(rows[0]) and "algorithms" not in str(rows[0]):
-            i += 1
-            acceptable_messages.append([str(rows[0]),str(rows[1]),str(rows[2]), str(rows[3])])
-
-    for rows in acceptable_messages:
-        print(rows)
-
-    ip = 'stonehillcsc325.cjjvanphib99.us-west-2.rds.amazonaws.com'
-    port = 1521
-    SID = 'ORCL'
-    dsn_tns = cx_Oracle.makedsn(ip, port, SID)
-    con = cx_Oracle.connect('mwojtyna', 'csrocks55', dsn_tns)
-    cur = con.cursor()
-    for rows in acceptable_messages:
-        command_string = "insert into MESSAGE(HANDLE_ID, TEXT_MESSAGE, IS_FROM_ME, DATE_OF_TEXT) values ("\
-        ":1,:2,:3,:4 )"
-        cur.execute(command_string, (str(rows[1]), deEmojify(str(rows[0])), str(rows[2]), str(rows[3])))
-    con.commit()
-
-    cursor.execute("select ROWID, id, service from handle")
-    handle_rows = []
-    for rows in cursor.fetchall():
-        handle_rows.append([str(rows[0]),str(rows[1]),str(rows[2])])
-
-
-
-    for rows in handle_rows:
-        command_string = "insert into HANDLE(HANDLE_ID, PHONE_NUMBER, SERVICE) values ("\
-        ":1,:2,:3)"
-        cur.execute(command_string, (str(rows[0]), str(rows[1]), str(rows[2])))
-    con.commit()
 
     return render_template("database_view.html")
 
