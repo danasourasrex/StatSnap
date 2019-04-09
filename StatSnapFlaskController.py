@@ -14,9 +14,6 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
-def deEmojify(inputString):
-    return inputString.encode('ascii', 'ignore').decode('ascii')
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
