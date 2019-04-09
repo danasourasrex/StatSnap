@@ -1,5 +1,5 @@
 from database.DAO import DAO
-from database.ServiceLookUp import ServiceLookUp:
+from database.ServiceLookUp import ServiceLookUp
 class ServiceLookUpDAO(DAO):
     def __init__(self):
         DAO.__init__(self,'SERVICE_LOOKUP')
