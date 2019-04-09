@@ -8,7 +8,7 @@ class MessageDAO(DAO):
 
     def insert(self, item):
         command_string = "INSERT INTO MESSAGE (HANDLE_ID,TEXT_MESSAGE,IS_FROM_ME,DATE_OF_TEXT)\
-         VALUES  (:1,:2,:3)"
+         VALUES  (:1,:2,:3,:4)"
         self.cur.execute(command_string, (str(item.get_handle_id()), str(item.get_text_message()), \
                                           str(item.get_is_from_me()), str(item.get_date_of_text())))
         self.con.commit()

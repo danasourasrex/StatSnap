@@ -1,10 +1,9 @@
 import os
 from flask import Flask, flash, render_template,request, redirect, url_for, session
 from werkzeug.utils import secure_filename
-import sqlite3
-import cx_Oracle
 from database.UserDAO import UserDAO
 from database.User import User
+from database.ChatDBtoOracle import ChatDBtoOracle
 
 
 UPLOAD_FOLDER = './db_upload'
@@ -22,13 +21,12 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def convertSQLtoOracle():
-
 
 @app.route('/database_view')
 def uploaded_file():
-    convertSQLtoOracle()
-    return render_template("database_view.html")
+    chat_db_to_oracle = ChatDBtoOracle()
+    chat_db_to_oracle.add_messages_to_db()
+    return "<h1> HELLO </h1>"
 
 @app.route('/upload_file', methods = ['GET', 'POST'])
 def upload_file():
