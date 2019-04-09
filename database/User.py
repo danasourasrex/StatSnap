@@ -9,6 +9,8 @@ class User:
                 "PASSWORD": self.get_password()}
 
     def set_values_from_row(self, row):
+        if len(row) != 2:
+            raise ValueError("Row not big enough")
         self.set_user_id(row[0])
         self.set_password(row[1])
 
