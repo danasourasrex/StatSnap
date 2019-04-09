@@ -19,7 +19,7 @@ class HandleDAO(DAO):
         self.con.commit()
 
     def select(self, data):
-        command_string = "select HANDLE_ID, PHONE_NUMBER, USER_ID from HANDLE where USER_ID = " + str(data[0]) + " and HANDLE_ID = " + str(data[1])
+        command_string = "select HANDLE_ID, PHONE_NUMBER, USER_ID from HANDLE where USER_ID = " + str(data.get_user_id()) + " and HANDLE_ID = " + str(data.get_handle_id())
         self.cur.execute(command_string)
         row = self.cur.fetchone()
         handle_to_return = Handle()
@@ -27,7 +27,8 @@ class HandleDAO(DAO):
         return handle_to_return
 
     def delete(self, data):
-        command_string = "delete * from HANDLE where USER_ID = :1 and HANDLE_ID = :2;"
-        self.cur.execute(command_string, (str(data[0]), str(data[1])))
+        command_string = "delete from HANDLE where USER_ID = :1 and HANDLE_ID = :2"
+        self.cur.execute(command_string, (str(data.get_user_id()), str(data.get_handle_id())))
         self.con.commit()
+
 
