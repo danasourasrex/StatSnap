@@ -11,6 +11,8 @@ class Handle:
                 "USER_ID": self.get_user_id()}
 
     def set_values_from_row(self, row):
+        if len(row) != 3:
+            raise ValueError("Row not big enough")
         self.set_handle_id(row[0])
         self.set_phone_number(row[1])
         self.set_user_id(row[2])
