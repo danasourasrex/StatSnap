@@ -3,7 +3,7 @@ from flask import Flask, flash, render_template,request, redirect, url_for
 from werkzeug.utils import secure_filename
 import sqlite3
 import cx_Oracle
-import emoji
+from database.UserDAO import User
 
 UPLOAD_FOLDER = './db_upload'
 ALLOWED_EXTENSIONS = set(['db'])

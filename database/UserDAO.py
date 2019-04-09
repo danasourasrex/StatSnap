@@ -3,7 +3,7 @@ from database.DAO import DAO
 from database.User import User
 
 
-class HandleDAO(DAO):
+class UserDAO(DAO):
 
     def __init__(self):
         DAO.__init__(self)
