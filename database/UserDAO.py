@@ -18,7 +18,6 @@ class UserDAO(DAO):
 
     def select(self, data):
         command_string = "select USER_ID, PASSWORD from STAT_SNAP_USER where USER_ID = " + str(data)
-        print(command_string)
         self.cur.execute(command_string)
         row = self.cur.fetchone()
         user = User()
