@@ -5,13 +5,13 @@ class ServiceLookUpDAO(DAO):
         DAO.__init__(self,'SERVICE_LOOKUP')
     def insert(self,item):
         command_string='INSERT INTO SERVICE_LOOKUP (PHONE_NUMBER,SERVICE) VALUES  (:1,:2)'
-        self.cur.execute(command_string,str(item.get_phone_number()),str(item.get_service()))
+        self.cur.execute(command_string,(str(item.get_phone_number()),str(item.get_service())))
     def delete(self, data):
         command_string='DELETE FROM SERVICE_LOOKUP WHERE PHONE_NUMBER= (:1)'
-        self.cur.execute(command_string,str(data))
+        self.cur.execute(command_string,(str(data)))
     def select(self, data):
-        command_string='SELECT *FROM SERVICE_LOOKUP WHERE PHONE_NUMBER=(:1)'
-        self.cur.execute(command_string,str(data))
+        command_string='SELECT *FROM SERVICE_LOOKUP WHERE PHONE_NUMBER='+str(data)
+        self.cur.execute(command_string)
         rows=self.cur.fetchall()
         service_lookUP=ServiceLookUp()
         service_lookUP.set_values_from_row(rows)
