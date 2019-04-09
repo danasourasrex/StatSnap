@@ -8,7 +8,7 @@ class ServiceLookUpDAO(DAO):
         self.cur.execute(command_string,(str(item.get_phone_number()),str(item.get_service())))
     def delete(self, data):
         command_string='DELETE FROM SERVICE_LOOKUP WHERE PHONE_NUMBER= (:1)'
-        self.cur.execute(command_string,(str(data)))
+        self.cur.execute(command_string,(str(data.get_phone_number())))
     def select(self, data):
         command_string='SELECT *FROM SERVICE_LOOKUP WHERE PHONE_NUMBER='+str(data)
         self.cur.execute(command_string)

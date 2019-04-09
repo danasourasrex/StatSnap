@@ -17,5 +17,5 @@ class MessageDAO(DAO):
 
     def delete(self, messageID):
         command_string='DELETE FROM MESSAGE WHERE MESSAGE_ID= :1'
-        self.cur.execute(command_string,(str(messageID)))
+        self.cur.execute(command_string,(str(messageID.get_message_id())))
 
