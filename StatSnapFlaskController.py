@@ -67,7 +67,7 @@ def uploaded_file():
 
     return render_template("database_view.html")
 
-@app.route('/', methods = ['GET', 'POST'])
+@app.route('/upload_file', methods = ['GET', 'POST'])
 def upload_file():
     msg = 'Please select a valid file.'
     if request.method == 'GET':
@@ -87,6 +87,14 @@ def upload_file():
         else:
             flash(msg)
             return render_template("index.html")
+
+@app.route('/', methods = ['GET', 'POST'])
+def login():
+    return render_template("login.html")
+
+@app.route('/create_account', methods = ['GET', 'POST'])
+def create_account():
+    return render_template("create_account.html")
 
 
 
