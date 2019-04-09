@@ -1,9 +1,11 @@
 import os
-from flask import Flask, flash, render_template,request, redirect, url_for
+from flask import Flask, flash, render_template,request, redirect, url_for, session
 from werkzeug.utils import secure_filename
 import sqlite3
 import cx_Oracle
-from database.UserDAO import User
+from database.UserDAO import UserDAO
+from database.User import User
+
 
 UPLOAD_FOLDER = './db_upload'
 ALLOWED_EXTENSIONS = set(['db'])
@@ -90,11 +92,31 @@ def upload_file():
 
 @app.route('/', methods = ['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        if isValid(request.form['username'], request.form['password']):
+            session['username'] = request.form['username']
+            return redirect(url_for('upload_file'))
+
+
     return render_template("login.html")
 
 @app.route('/create_account', methods = ['GET', 'POST'])
 def create_account():
+    if request.method == 'POST':
+        userDao = UserDAO()
+        user = User()
+        user.set_values_from_row([str(request.form['username']), str(request.form['password'])])
+        userDao.insert(user)
+        return redirect(url_for('login'))
+
     return render_template("create_account.html")
+
+
+def isValid(username,password):
+    userDao = UserDAO()
+    if not userDao.select(username):
+        return False
+    return userDao.select(username).get_password() == password
 
 
 

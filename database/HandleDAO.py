@@ -32,13 +32,3 @@ class HandleDAO(DAO):
         self.cur.execute(command_string, (str(data[0]), str(data[1])))
         self.con.commit()
 
-
-if __name__ == '__main__':
-
-    handle_dao = HandleDAO()
-    #handle = Handle()
-    #handle.set_user_id(1)
-    #handle.set_phone_number("8606816556")
-    #handle.set_user_id(2)#
-#
-#    handle_dao.insert(handle)

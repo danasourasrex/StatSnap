@@ -5,8 +5,8 @@ class User:
         self.__password = ""
 
     def get_dictionary(self):
-        return {"USER_ID": self.get_handle_id(),
-                "PASSWORD": self.get_phone_number()}
+        return {"USER_ID": self.get_user_id(),
+                "PASSWORD": self.get_password()}
 
     def set_values_from_row(self, row):
         self.set_user_id(row[0])
@@ -15,7 +15,7 @@ class User:
     def get_user_id(self):
         return self.__user_id
 
-    def get_phone_number(self):
+    def get_password(self):
         return self.__password
 
     def set_user_id(self, data):

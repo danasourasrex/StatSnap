@@ -16,12 +16,17 @@ class UserDAO(DAO):
                                           str(data.get_password())))
         self.con.commit()
 
-    def select(self, key):
-        command_string = "select USER_ID, PASSWORD from STAT_SNAP_USER where USER_ID = :1;"
-        self.cur.execute(command_string, (str(key)))
-        self.con.commit()
+    def select(self, data):
+        command_string = "select USER_ID, PASSWORD from STAT_SNAP_USER where USER_ID = " + str(data)
+        print(command_string)
+        self.cur.execute(command_string)
+        row = self.cur.fetchone()
+        user = User()
+        user.set_values_from_row([row[0], row[1]])
+        return user
 
-    def delete(self, key):
+
+    def delete(self, data):
         command_string = "delete from STAT_SNAP_USER where USER_ID = :1;"
-        self.cur.execute(command_string, (str(key)))
+        self.cur.execute(command_string, (str(data)))
         self.con.commit()
