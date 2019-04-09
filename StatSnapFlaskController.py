@@ -22,11 +22,12 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/database_view/')
+def convertSQLtoOracle():
+
+
+@app.route('/database_view')
 def uploaded_file():
-
-
-
+    convertSQLtoOracle()
     return render_template("database_view.html")
 
 @app.route('/upload_file', methods = ['GET', 'POST'])
@@ -39,9 +40,6 @@ def upload_file():
             flash(msg)
             return render_template("index.html")
         file = request.files['file']
-        if file.filename == '':
-            flash(msg)
-            return render_template("index.html")
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
