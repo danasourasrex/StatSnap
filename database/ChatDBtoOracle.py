@@ -3,13 +3,15 @@ from database.MessageDAO import MessageDAO
 from database.Message import Message
 from database.Handle import Handle
 from database.HandleDAO import HandleDAO
+from database.ServiceLookUp import ServiceLookUp
+from database.ServiceLookUpDAO import ServiceLookUpDAO
 import sqlite3
 
 class ChatDBtoOracle():
 
     def __init__(self):
-        connection = sqlite3.connect("db_upload/chat.db")
-        self.cur = connection.cursor()
+        self.conn = sqlite3.connect("db_upload/chat.db")
+        self.cur = self.conn.cursor()
 
     def deEmojify(self, inputString):
         return inputString.encode('ascii', 'ignore').decode('ascii')
@@ -29,6 +31,26 @@ class ChatDBtoOracle():
             message = Message()
             message.set_values_from_row([0, rows[1], self.deEmojify(rows[0]), rows[2], rows[3]])
             messageDAO.insert(message)
+
+    def add_handles_to_db(self, username):
+        self.cur.execute("select ROWID, id, service from handle")
+        handle_dao = HandleDAO()
+        service_look_up_dao = ServiceLookUpDAO()
+        handle_columns = []
+        for rows in self.cur.fetchall():
+            handle_columns.append([str(rows[0]), str(rows[1]), str(rows[2])])
+        for rows in handle_columns:
+            handle = Handle()
+            handle.set_values_from_row([str(rows[0]), str(rows[1]), str(username)])
+            handle_dao.insert(handle)
+        for rows in handle_columns:
+            service_look_up = ServiceLookUp()
+            service_look_up.set_values_from_row([str(rows[1]), str(rows[2])])
+            service_look_up_dao.insert(service_look_up)
+
+
+
+
 
 
 

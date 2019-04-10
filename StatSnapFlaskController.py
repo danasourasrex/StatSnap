@@ -23,6 +23,8 @@ def allowed_file(filename):
 def uploaded_file():
     chat_db_to_oracle = ChatDBtoOracle()
     chat_db_to_oracle.add_messages_to_db()
+    print(str(session['username']))
+    chat_db_to_oracle.add_handles_to_db(str(session['username']))
     return "<h1> HELLO </h1>"
 
 @app.route('/upload_file', methods = ['GET', 'POST'])
