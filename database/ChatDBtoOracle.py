@@ -16,7 +16,7 @@ class ChatDBtoOracle():
     def deEmojify(self, inputString):
         return inputString.encode('ascii', 'ignore').decode('ascii')
 
-    def add_messages_to_db(self):
+    def add_messages_to_db(self, username):
         self.cur.execute("select text, handle_id, is_from_me, date from message")
         i = 0
         acceptable_messages = []
@@ -29,7 +29,7 @@ class ChatDBtoOracle():
         messageDAO = MessageDAO()
         for rows in acceptable_messages:
             message = Message()
-            message.set_values_from_row([0, rows[1], self.deEmojify(rows[0]), rows[2], rows[3]])
+            message.set_values_from_row([str(username), rows[1], self.deEmojify(rows[0]), rows[2], rows[3]])
             messageDAO.insert(message)
 
     def add_handles_to_db(self, username):

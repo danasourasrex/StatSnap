@@ -118,7 +118,7 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             chat_db_to_oracle = ChatDBtoOracle()
-            chat_db_to_oracle.add_messages_to_db()
+            chat_db_to_oracle.add_messages_to_db(str(session['username']))
             chat_db_to_oracle.add_handles_to_db(str(session['username']))
             sql_stat_commands_dao = SQLStatCommandsDAO(str(session['username']))
             generate_data(sql_stat_commands_dao)
