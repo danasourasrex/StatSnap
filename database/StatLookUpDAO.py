@@ -8,7 +8,7 @@ class StatLookUpDAO(DAO):
 
     def insert(self, data):
         command_string = 'INSERT INTO STAT_LOOKUP (STAT_ID, STAT_NAME, DATA) VALUES  (:1,:2,:3)'
-        self.cur.execute(command_string, (str(data.get_stat_id()), str(data.get_stat_name()), str(data.get_data())))
+        self.cur.execute(command_string, (str(data.get_stat_name()), str(data.get_data())))
         self.con.commit()
 
     def delete(self, data):
