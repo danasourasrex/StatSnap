@@ -17,9 +17,10 @@ class StatLookUpDAO(DAO):
         self.cur.execute(command_string, (str(data.get_stat_id())))
         self.con.commit()
 
-    def select(self, stat_id, handle_id):
-        command_string = "SELECT * FROM STAT_LOOKUP WHERE STAT_ID = " + stat_id
+    def select(self, stat_id):
+        command_string = "SELECT * FROM STAT_LOOKUP WHERE STAT_ID = " + str(stat_id)
         self.cur.execute(command_string)
-        rows = self.cur.fetchall()
+        rows = self.cur.fetchone()
         statLookup = StatLookup()
         statLookup.set_values_from_row(rows)
+        return statLookup

@@ -28,7 +28,7 @@ class StatIdDAO(DAO):
         return stat_id
 
     def select_all(self,handle_id):
-        command_string = "SELECT * FROM STAT_ID WHERE HANDLE_ID= '"+str(handle_id)+"'"
+        command_string = "SELECT * FROM STAT_ID WHERE ID= '"+str(handle_id)+"'"
         self.cur.execute(command_string)
         list_of_stat_id = []
         for rows in self.cur.fetchall():
