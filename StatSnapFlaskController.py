@@ -7,7 +7,7 @@ from database.ChatDBtoOracle import ChatDBtoOracle
 from database.SQLStatCommandsDAO import SQLStatCommandsDAO
 from database.StatIdDAO import StatIdDAO
 from database.StatLookUpDAO import StatLookUpDAO
-
+from database.StatLookup import StatLookup
 
 
 UPLOAD_FOLDER = './db_upload'
@@ -104,6 +104,15 @@ def index():
         list_of_stats=get_stat_id(session['username'])
         return list_of_stats
 
+def get_data_from_stats(list_of_stats):
+    list_of_data_obj=[]
+    stat_look_up=StatLookUpDAO()
+    for stat in list_of_stats:
+        list_of_data_obj.append(stat_look_up.select(stat.get_stat_id()))
+    return list_of_data_obj
+
+
+
 def get_stat_id(handle_id):
     stat_id_dao = StatIdDAO()
     list_of_stat_id = stat_id_dao.select_all(handle_id)
@@ -168,4 +177,5 @@ def isValid(username,password):
 
 
 if __name__ == "__main__":
-    app.run()
+    print(get_data_from_stats(get_stat_id('7742192011')))
+    #app.run()
