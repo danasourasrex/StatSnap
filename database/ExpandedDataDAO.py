@@ -8,7 +8,7 @@ class ExpandedDataDAO(DAO):
 
     def insert(self, item):
         command_string = "INSERT INTO EXPANDED_DATA (STAT_ID, DATA, OCCURRENCES) VALUES  (:1,:2,:3)"
-        self.cur.execute(command_string, (str(item.get_stat_id), str(item.get_data), str(item.get_occurrences())))
+        self.cur.execute(command_string, (item.get_stat_id(), str(item.get_data()), item.get_occurrences()))
         self.con.commit()
 
     def select(self, key):

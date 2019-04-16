@@ -24,6 +24,7 @@ def allowed_file(filename):
 
 
 def generate_data(dao):
+
     dao.insert_avg_message_length_general()
     dao.insert_avg_message_length_general_is_from_me(0)
     dao.insert_avg_message_length_general_is_from_me(1)
@@ -41,6 +42,7 @@ def generate_data(dao):
     dao.insert_total_text_messages_general_is_from_me(1)
 
     dao.insert_unique_numbers_general()
+
     dao.insert_date_of_first_text_general()
     dao.insert_date_of_first_text_general_is_from_me(0)
     dao.insert_date_of_first_text_general_is_from_me(1)
@@ -49,9 +51,11 @@ def generate_data(dao):
     dao.insert_profane_language_count_general_is_from_me(0)
     dao.insert_profane_language_count_general_is_from_me(1)
 
+
     dao.insert_most_common_word_general()
     dao.insert_most_common_word_general_is_from_me(0)
     dao.insert_most_common_word_general_is_from_me(1)
+
 
     dao.insert_day_with_most_texts_general()
     dao.insert_day_with_most_texts_general_is_from_me(0)
@@ -60,6 +64,7 @@ def generate_data(dao):
     dao.insert_texts_over_time_general()
     dao.insert_texts_over_time_general_is_from_me(0)
     dao.insert_texts_over_time_general_is_from_me(1)
+
     dao.insert_most_frequently_spoken_to_general()
     dao.insert_most_messages_from_general()
     dao.insert_most_messages_to_general()
