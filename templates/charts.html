@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+      <title>StatSnap</title>
+      <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename = 'favicon.ico') }}">
+      <!-- CSS  -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="jquery-3.3.1.min.js"></script>
+   </head>
+<body>
+<nav class="grey lighten-3" role="navigation">
+         <div class="nav-wrapper container">
+            <a id="logo-container" href="#" class="brand-logo">
+            <img src="{{ url_for('static', filename = 'statsnap.png') }}" width="260px" alt="Statsnap Logo"></a>
+            <ul class="right hide-on-med-and-down">
+               <li><a class="black-text" href="#">FAQ</a></li>
+            </ul>
+            <ul id="nav-mobile" class="sidenav">
+               <li><a href="#">Navbar Link</a></li>
+            </ul>
+            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+         </div>
+</nav>
+
+
+<div class = "container">
+    <h1 class = "center">Stats</h1>
+    <div class = 'grey lighten-4'>
+    <div class = "row">
+        <div class = "col s6">
+            <h5 class = "center">Messages Over Time</h5>
+            <canvas id="myChart"></canvas>
+        </div>
+        <div class = "col s6">
+            <h5 class = "center">Messages By Number</h5>
+            <canvas id="messages_by_number"></canvas>
+        </div>
+        <div class = "col s6">
+            <h5 class = "center">Favorite Words</h5>
+            <canvas id="favorite_words"></canvas>
+        </div>
+
+    </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+            label: 'Messages Over Time',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [0, 10, 5, 2, 20, 30, 45]
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+new Chart(document.getElementById("messages_by_number"), {
+    type: 'bar',
+    data: {
+      labels: ["8606931212", "1234567890", "8606816556", "2035689901", "9806778853"],
+      datasets: [
+        {
+          label: "Messages By Number",
+          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+          data: [128,256,64,18,24]
+        }
+      ]
+    },
+    options: {
+      legend: { display: false },
+      title: {
+        display: true,
+        text: 'Messages By Number'
+      }
+    }
+});
+new Chart(document.getElementById("favorite_words"), {
+    type: 'pie',
+    data: {
+      labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
+      datasets: [{
+        label: "Population (millions)",
+        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+        data: [2478,5267,734,784,433]
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Predicted world population (millions) in 2050'
+      }
+    }
+});
+</script>
+
+</body>
+</html>
