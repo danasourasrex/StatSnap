@@ -11,7 +11,6 @@ class StatIdDAO(DAO):
         self.cur.execute(command_string, (str(data.get_id()), str(data.get_handle_id())))
         self.con.commit()
         command_string = 'select STAT_ID_SEQUENCE.currval from dual'
-        print("")
         self.cur.execute(command_string)
         return self.cur.fetchone()[0]
 
