@@ -7,6 +7,10 @@ from database.ChatDBtoOracle import ChatDBtoOracle
 from database.SQLStatCommandsDAO import SQLStatCommandsDAO
 from database.StatIdDAO import StatIdDAO
 from database.StatLookUpDAO import StatLookUpDAO
+from database.ExpandedDataDAO import ExpandedDataDAO
+from database.HandleDAO import HandleDAO
+from database.Handle import Handle
+
 from database.StatLookup import StatLookup
 
 
@@ -68,28 +72,33 @@ def generate_data(dao):
     dao.insert_most_frequently_spoken_to_general()
     dao.insert_most_messages_from_general()
     dao.insert_most_messages_to_general()
+    handle_dao=HandleDAO()
+    list_of_handle_ids=handle_dao.select_distinct_handle_ids(dao.username)
 
-    #dao.insert_avg_message_length_by_handle()
-    #dao.insert_avg_message_length_by_handle_is_from_me()
-    #dao.insert_longest_message_length_by_handle()
-    #dao.insert_longest_message_length_by_handle_is_from_me(0)
-    #dao.insert_longest_message_length_by_handle_is_from_me(1)
-    #dao.insert__minimum_length_message_by_handle(self, handle_id)
-    #dao.insert__minimum_length_message_by_handle_is_from_me(0)
-    #dao.insert__minimum_length_message_by_handle_is_from_me(1)
-    #dao.insert_total_text_messages_by_handle()
-    # dao.insert_total_text_messages_by_handle_is_from_me(0)
-    # dao.insert_total_text_messages_by_handle_is_from_me(1)
-    # dao.insert_date_of_first_text_by_handle()
-    # dao.insert_date_of_first_text_by_handle_is_from_me(0)
-    #dao.insert_date_of_first_text_by_handle_is_from_me(1)
-    #dao.insert_profane_language_count_by_handle
-    #dao.insert_profane_language_count_by_handle_is_from_me
-    #dao.insert_profane_language_count_by_handle_is_from_me
-    # dao.insert_most_common_word_by_handle()
-    # dao.insert_most_common_word_by_handle_is_from_me(0)
-    # dao.insert_most_common_word_by_handle_is_from_me(1)
-    #dao.insert_day_with_most_texts_by_handle()
+    for handle in list_of_handle_ids:
+        print (handle)
+        dao.insert_avg_message_length_by_handle(handle)
+        dao.insert_avg_message_length_by_handle_is_from_me(handle,0)
+        dao.insert_avg_message_length_by_handle_is_from_me(handle,1)
+        dao.insert_longest_message_length_by_handle(handle)
+        dao.insert_longest_message_length_by_handle_is_from_me(handle,0)
+        dao.insert_longest_message_length_by_handle_is_from_me(handle,1)
+        dao.insert__minimum_length_message_by_handle(handle)
+        dao.insert__minimum_length_message_by_handle_is_from_me(handle,0)
+        dao.insert__minimum_length_message_by_handle_is_from_me(handle,1)
+        dao.insert_total_text_messages_by_handle(handle)
+        dao.insert_total_text_messages_by_handle_is_from_me(handle,0)
+        dao.insert_total_text_messages_by_handle_is_from_me(handle,1)
+        dao.insert_date_of_first_text_by_handle(handle)
+        dao.insert_date_of_first_text_by_handle_is_from_me(handle,0)
+        dao.insert_date_of_first_text_by_handle_is_from_me(handle,1)
+        dao.insert_profane_language_count_by_handle(handle)
+        dao.insert_profane_language_count_by_handle_is_from_me(handle,0)
+        dao.insert_profane_language_count_by_handle_is_from_me(handle,1)
+        dao.insert_most_common_word_by_handle(handle)
+        dao.insert_most_common_word_by_handle_is_from_me(handle,0)
+        dao.insert_most_common_word_by_handle_is_from_me(handle,1)
+        dao.insert_day_with_most_texts_by_handle(handle)
 
 
 @app.route('/')
@@ -101,21 +110,33 @@ def index():
     if request.method=='POST':
         return "hi MIKE"
     elif request.method=='GET':
-        list_of_stats=get_stat_id(session['username'])
-        return list_of_stats
+        print("HERE")
+        list_of_data=get_data_from_stats(get_stat_id(session['username']))
+
+        return render_template('index.html',**locals())
 
 def get_data_from_stats(list_of_stats):
     list_of_data_obj=[]
     stat_look_up=StatLookUpDAO()
     for stat in list_of_stats:
-        list_of_data_obj.append(stat_look_up.select(stat.get_stat_id()))
+        stat_look_up_obj=stat_look_up.select(stat.get_stat_id())
+        if stat_look_up_obj.get_data() is None:
+            list_of_occurences =get_list_of_occurences(stat.get_stat_id())
+            list_of_data_obj.append(list_of_occurences)
+        else:
+            list_of_data_obj.append(stat_look_up.select(stat.get_stat_id()))
+
     return list_of_data_obj
 
-
+def get_list_of_occurences(stat_id):
+    expanded_data_dao=ExpandedDataDAO()
+    list_of_expanded_data=expanded_data_dao.select(stat_id)
+    return list_of_expanded_data
 
 def get_stat_id(handle_id):
     stat_id_dao = StatIdDAO()
     list_of_stat_id = stat_id_dao.select_all(handle_id)
+
     return list_of_stat_id
 
 @app.route('/upload_file', methods = ['GET', 'POST'])
@@ -147,9 +168,10 @@ def login():
         if isValid(request.form['username'], request.form['password']):
             session['username'] = request.form['username']
             has_uploaded = get_stat_id(session['username']) == None
-            if not has_uploaded:
+            if has_uploaded:
                 return redirect(url_for('upload_file'))
             else:
+                print("HERRO")
                 return redirect(url_for('index'))
 
 
@@ -177,5 +199,4 @@ def isValid(username,password):
 
 
 if __name__ == "__main__":
-    print(get_data_from_stats(get_stat_id('7742192011')))
-    #app.run()
+    app.run()
