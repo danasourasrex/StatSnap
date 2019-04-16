@@ -31,4 +31,12 @@ class HandleDAO(DAO):
         self.cur.execute(command_string, (str(data.get_user_id()), str(data.get_handle_id())))
         self.con.commit()
 
+    def select_distinct_handle_ids(self, key):
+        command_string = "SELECT DISTINCT(HANDLE_ID) FROM MESSAGE WHERE USER_ID = '" + str(key) + "'"
+        self.cur.execute(command_string)
+        distinct_handle_ids = []
+        for rows in self.cur.fetchall():
+            distinct_handle_ids.append(str(rows[0]))
+        return distinct_handle_ids
+
 
