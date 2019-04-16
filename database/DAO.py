@@ -12,7 +12,6 @@ class DAO:
         self.cur = self.con.cursor()
 
     def __del__(self):
-        self.cur.close()
         self.con.close()
 
     def select(self, data):

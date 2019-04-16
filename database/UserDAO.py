@@ -17,7 +17,7 @@ class UserDAO(DAO):
         self.con.commit()
 
     def select(self, data):
-        command_string = "select USER_ID, PASSWORD from STAT_SNAP_USER where USER_ID = " + str(data)
+        command_string = "select USER_ID, PASSWORD from STAT_SNAP_USER where USER_ID = '" + str(data) + "'"
         self.cur.execute(command_string)
         row = self.cur.fetchone()
         user = User()

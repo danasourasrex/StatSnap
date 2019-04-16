@@ -10,6 +10,7 @@ from database.StatLookUpDAO import StatLookUpDAO
 from database.ExpandedDataDAO import ExpandedDataDAO
 from database.HandleDAO import HandleDAO
 from database.Handle import Handle
+from database.MessageDAO import MessageDAO
 
 from database.StatLookup import StatLookup
 
@@ -110,9 +111,8 @@ def index():
     if request.method=='POST':
         return "hi MIKE"
     elif request.method=='GET':
-        print("HERE")
-        list_of_data=get_data_from_stats(get_stat_id(session['username']))
-
+        #list_of_data=get_data_from_stats(get_stat_id(session['username']))
+        list_of_messages = get_all_user_messages(str(session['username']))
         return render_template('index.html',**locals())
 
 def get_data_from_stats(list_of_stats):
@@ -133,10 +133,13 @@ def get_list_of_occurences(stat_id):
     list_of_expanded_data=expanded_data_dao.select(stat_id)
     return list_of_expanded_data
 
+def get_all_user_messages(user_id):
+    message_dao = MessageDAO()
+    return message_dao.select_all_users_messages(user_id)
+
 def get_stat_id(handle_id):
     stat_id_dao = StatIdDAO()
     list_of_stat_id = stat_id_dao.select_all(handle_id)
-    print(list_of_stat_id)
     return list_of_stat_id
 
 @app.route('/upload_file', methods = ['GET', 'POST'])

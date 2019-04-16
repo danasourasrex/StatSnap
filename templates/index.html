@@ -6,10 +6,22 @@
       <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename = 'favicon.ico') }}">
       <!-- CSS  -->
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
       <!-- Compiled and minified CSS -->
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
       <!-- Compiled and minified JavaScript -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://cdn.datatables.net/responsive/2.1.0/css/responsive.dataTables.min.css" rel="stylesheet" media="screen">
+<link href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" rel="stylesheet" media="screen">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js
+"></script>
+<script src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready( function () {
+    $('#myTable').DataTable();
+} );</script>
+
    </head>
 <body>
       <nav class="grey lighten-3" role="navigation">
@@ -26,20 +38,24 @@
          </div>
       </nav>
 
-<table class = "striped centered highlight">
+<table id = "myTable" class = "striped highlight">
         <thead>
           <tr>
-              <th>Stat Name</th>
-              <th>Data</th>
+              <th>Text Message</th>
+              <th>Is From Me</th>
+              <th>Phone Number</th>
+              <th>Date Of Text</th>
 
           </tr>
         </thead>
 
         <tbody>
-          {% for data in list_of_data %}
+          {% for data in list_of_messages %}
         <tr>
-         <td>{{ data.get_stat_name() }}</td>
-            <td>{{ data.get_data() }}</td>
+         <td>{{ data[0] }}</td>
+            <td>{{ data[1] }}</td>
+            <td>{{ data[2] }}</td>
+            <td>{{ data[3] }}</td>
         </tr>
         {% endfor %}
         </tbody>
