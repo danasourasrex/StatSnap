@@ -12,7 +12,7 @@ import cx_Oracle
 
 
 class SQLStatCommandsDAO(DAO):
-    is_from_me_arr = ["Not from me", "From me"]
+    is_from_me_arr = ["Not From Me", "From Me"]
 
     def __init__(self, username):
         DAO.__init__(self)
@@ -72,7 +72,7 @@ class SQLStatCommandsDAO(DAO):
         try:
             self.cur.execute(command_string)
             
-            self.generate_data_insert(9999999999999, "Average Message Length " + self.is_from_me_arr[is_from_me],
+            self.generate_data_insert(9999999999999, "Average Message Length - General " + self.is_from_me_arr[is_from_me],
                                       str(self.cur.fetchone()[0]))
 
         except (cx_Oracle.DatabaseError,TypeError) as e:
@@ -96,7 +96,7 @@ class SQLStatCommandsDAO(DAO):
         try:
             self.cur.execute(command_string)
             
-            self.generate_data_insert(9999999999999, "Longest Message " + self.is_from_me_arr[is_from_me],
+            self.generate_data_insert(9999999999999, "Longest Message - General " + self.is_from_me_arr[is_from_me],
                                       self.cur.fetchone()[0])
 
         except (cx_Oracle.DatabaseError,TypeError) as e:
@@ -122,7 +122,7 @@ class SQLStatCommandsDAO(DAO):
         try:
             self.cur.execute(command_string)
             
-            self.generate_data_insert(9999999999999, "Shortest Message " + self.is_from_me_arr[is_from_me],
+            self.generate_data_insert(9999999999999, "Shortest Message - General " + self.is_from_me_arr[is_from_me],
                                       self.cur.fetchone()[0])
 
         except (cx_Oracle.DatabaseError,TypeError) as e:
@@ -142,7 +142,7 @@ class SQLStatCommandsDAO(DAO):
         try:
             self.cur.execute(command_string)
             
-            self.generate_data_insert(9999999999999, "Total Texts " + self.is_from_me_arr[is_from_me],
+            self.generate_data_insert(9999999999999, "Total Texts - General " + self.is_from_me_arr[is_from_me],
                                       self.cur.fetchone()[0])
 
         except (cx_Oracle.DatabaseError,TypeError) as e:
@@ -176,8 +176,8 @@ class SQLStatCommandsDAO(DAO):
         try:
             self.cur.execute(command_string)
             
-            self.generate_data_insert(9999999999999, "Date first sent text " + self.is_from_me_arr[is_from_me],
-                                      self.cur.fetchone()[0])
+            self.generate_data_insert(9999999999999, "Date of First Text - General " + self.is_from_me_arr[is_from_me],
+                                      time.localtime(int((self.cur.fetchone()[0] / 1000000000) + 978307200)))
 
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
@@ -191,7 +191,7 @@ class SQLStatCommandsDAO(DAO):
             for rows in self.cur.fetchall():
                 if profanity.contains_profanity(rows[0]) and rows[0] is not None:
                     profane_language_count += 1
-            self.generate_data_insert(9999999999999, "Total Occurences of Profane Language  - General",
+            self.generate_data_insert(9999999999999, "Total Occurrences of Profane Language - General",
                                       str(profane_language_count))
 
         except (cx_Oracle.DatabaseError,TypeError) as e:
@@ -208,7 +208,7 @@ class SQLStatCommandsDAO(DAO):
                 if profanity.contains_profanity(rows[0]) and rows[0] is not None:
                     profane_language_count += 1
             self.generate_data_insert(9999999999999,
-                                      'Total Occurences of profane language from me' + self.is_from_me_arr[is_from_me],
+                                      'Total Occurrences of Profane Language - General ' + self.is_from_me_arr[is_from_me],
                                       profane_language_count)
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
@@ -222,7 +222,7 @@ class SQLStatCommandsDAO(DAO):
             for rows in self.cur.fetchall():
                 all_texts_as_string += " " + str(rows[0]).lower()
             counter = Counter(all_texts_as_string.split())
-            self.generate_data_insert(9999999999999, "5 Most Used Words and Associated Occurences  - General",
+            self.generate_data_insert(9999999999999, "5 Most Used Words and Associated Occurrences - General",
                                       counter.most_common(5))
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print("HELLO")
@@ -238,7 +238,7 @@ class SQLStatCommandsDAO(DAO):
                 all_texts_as_string += " " + str(rows[0]).lower()
             counter = Counter(all_texts_as_string.split())
             self.generate_data_insert(9999999999999,
-                                      "5 Most Used Words and Associated Occurences " + self.is_from_me_arr[is_from_me],
+                                      "5 Most Used Words and Associated Occurrences - General" + self.is_from_me_arr[is_from_me],
                                       counter.most_common(5))
 
         except (cx_Oracle.DatabaseError,TypeError) as e:
@@ -254,7 +254,7 @@ class SQLStatCommandsDAO(DAO):
                 all_dates_as_string += " " + str(
                     time.strftime('%Y-%m-%d', time.localtime(int((rows[0] / 1000000000) + 978307200))))
             counter = Counter(all_dates_as_string.split())
-            self.generate_data_insert(9999999999999, "Day With Most Texts  - General", counter.most_common(1))
+            self.generate_data_insert(9999999999999, "Day With Most Texts - General", counter.most_common(1))
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
 
@@ -269,7 +269,7 @@ class SQLStatCommandsDAO(DAO):
                 all_dates_as_string += " " + str(
                     time.strftime('%Y-%m-%d', time.localtime(int((rows[0] / 1000000000) + 978307200))))
             counter = Counter(all_dates_as_string.split())
-            self.generate_data_insert(9999999999999, "Day With Most Texts " + self.is_from_me_arr[is_from_me],
+            self.generate_data_insert(9999999999999, "Day With Most Texts - General " + self.is_from_me_arr[is_from_me],
                                       counter.most_common(1))
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
@@ -285,7 +285,7 @@ class SQLStatCommandsDAO(DAO):
                 all_dates_as_string += " " + str(
                     time.strftime('%Y-%m-%d', time.localtime(int((rows[0] / 1000000000) + 978307200))))
             counter = Counter(all_dates_as_string.split())
-            self.generate_data_insert(9999999999999, "Texts Over Time General", counter)
+            self.generate_data_insert(9999999999999, "Texts Over Time - General", counter)
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
 
@@ -300,7 +300,7 @@ class SQLStatCommandsDAO(DAO):
                 all_dates_as_string += " " + str(
                     time.strftime('%Y-%m-%d', time.localtime(int((rows[0] / 1000000000) + 978307200))))
             counter = Counter(all_dates_as_string.split())
-            self.generate_data_insert(9999999999999, "Texts Over Time " + self.is_from_me_arr[is_from_me], counter)
+            self.generate_data_insert(9999999999999, "Texts Over Time - General " + self.is_from_me_arr[is_from_me], counter)
 
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
@@ -349,7 +349,7 @@ class SQLStatCommandsDAO(DAO):
             self.username) + "' AND HANDLE_ID = " + str(handle_id)
         try:
             self.cur.execute(command_string)
-            self.generate_data_insert(handle_id, "Average legth of messages", self.cur.fetchone()[0])
+            self.generate_data_insert(handle_id, "Average Message Length - Handle", self.cur.fetchone()[0])
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
 
@@ -359,7 +359,7 @@ class SQLStatCommandsDAO(DAO):
         try:
             self.cur.execute(command_string)
             
-            self.generate_data_insert(handle_id, "Average legth of messages", self.cur.fetchone()[0])
+            self.generate_data_insert(handle_id, "Average Message Length - Handle " + self.is_from_me_arr[is_from_me], self.cur.fetchone()[0])
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
 
@@ -371,7 +371,7 @@ class SQLStatCommandsDAO(DAO):
         try:
             self.cur.execute(command_string)
             
-            self.generate_data_insert(handle_id, "Insert Longest Message length by handleID -General",
+            self.generate_data_insert(handle_id, "Longest Message - Handle",
                                       self.cur.fetchone()[0])
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
@@ -385,7 +385,7 @@ class SQLStatCommandsDAO(DAO):
             self.cur.execute(command_string)
             
             self.generate_data_insert(handle_id,
-                                      "Insert Longest Message length by handleID" + self.is_from_me_arr[is_from_me],
+                                      "Longest Message - Handle " + self.is_from_me_arr[is_from_me],
                                       self.cur.fetchone()[0])
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
@@ -398,7 +398,7 @@ class SQLStatCommandsDAO(DAO):
         try:
             self.cur.execute(command_string)
             
-            self.generate_data_insert(handle_id, "Insert Minimum Message length by handle id", self.cur.fetchone()[0])
+            self.generate_data_insert(handle_id, "Shortest Message - Handle", self.cur.fetchone()[0])
 
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
@@ -411,7 +411,7 @@ class SQLStatCommandsDAO(DAO):
         try:
             self.cur.execute(command_string)
             
-            self.generate_data_insert(handle_id, "Insert Minimum Message length" + self.is_from_me_arr[is_from_me],
+            self.generate_data_insert(handle_id, "Shortest Message - Handle" + self.is_from_me_arr[is_from_me],
                                       self.cur.fetchone()[0])
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
@@ -422,7 +422,7 @@ class SQLStatCommandsDAO(DAO):
         try:
             self.cur.execute(command_string)
             
-            self.generate_data_insert(handle_id, "Insert Total Messages- General", self.cur.fetchone()[0])
+            self.generate_data_insert(handle_id, "Total Texts - Handle", self.cur.fetchone()[0])
 
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
@@ -433,7 +433,7 @@ class SQLStatCommandsDAO(DAO):
         try:
             self.cur.execute(command_string)
             
-            self.generate_data_insert(handle_id, "Insert Total Messages-" + self.is_from_me_arr[is_from_me],
+            self.generate_data_insert(handle_id, "Total Texts - Handle " + self.is_from_me_arr[is_from_me],
                                       self.cur.fetchone()[0])
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
@@ -446,7 +446,7 @@ class SQLStatCommandsDAO(DAO):
         try:
             self.cur.execute(command_string)
             
-            self.generate_data_insert(handle_id, "Insert Total Messages- General",
+            self.generate_data_insert(handle_id, "Date of First Text - Handle",
                                       (str(time.strftime('%Y-%m-%d %H:%M:%S',
                                                          time.localtime(int((
                                                                                     self.cur.fetchone()[
@@ -462,7 +462,7 @@ class SQLStatCommandsDAO(DAO):
         try:
             self.cur.execute(command_string)
             
-            self.generate_data_insert(handle_id, "Insert Total Messages-" + self.is_from_me_arr[is_from_me], (str(
+            self.generate_data_insert(handle_id, "Date of First Text - Handle " + self.is_from_me_arr[is_from_me], (str(
                 time.strftime('%Y-%m-%d %H:%M:%S',
                               time.localtime(int((self.cur.fetchone()[0] / 1000000000) + 978307200))))))
         except (cx_Oracle.DatabaseError,TypeError) as e:
@@ -478,7 +478,7 @@ class SQLStatCommandsDAO(DAO):
             for rows in self.cur.fetchall():
                 if profanity.contains_profanity(rows[0]) and rows[0] is not None:
                     profane_language_count += 1
-            self.generate_data_insert(handle_id, "Insert Profane Language Count- General", str(profane_language_count))
+            self.generate_data_insert(handle_id, "Total Occurrences of Profane Language - Handle", str(profane_language_count))
 
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
@@ -493,7 +493,7 @@ class SQLStatCommandsDAO(DAO):
             for rows in self.cur.fetchall():
                 if profanity.contains_profanity(rows[0]) and rows[0] is not None:
                     profane_language_count += 1
-            self.generate_data_insert(handle_id, "Insert Profane Language Count" + self.is_from_me_arr[is_from_me],
+            self.generate_data_insert(handle_id, "Total Occurrences of Profane Language - Handle " + self.is_from_me_arr[is_from_me],
                                       str(profane_language_count))
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
@@ -508,7 +508,7 @@ class SQLStatCommandsDAO(DAO):
             for rows in self.cur.fetchall():
                 all_texts_as_string += " " + str(rows[0]).lower()
             counter = Counter(all_texts_as_string.split())
-            self.generate_data_insert(handle_id, "Insert Profane Language Count -General", counter.most_common(5))
+            self.generate_data_insert(handle_id, "5 Most Used Words and Associated Occurrences - Handle", counter.most_common(5))
 
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
@@ -523,7 +523,7 @@ class SQLStatCommandsDAO(DAO):
             for rows in self.cur.fetchall():
                 all_texts_as_string += " " + str(rows[0]).lower()
             counter = Counter(all_texts_as_string.split())
-            self.generate_data_insert(handle_id, "Insert Profane Language Count" + self.is_from_me_arr[is_from_me],
+            self.generate_data_insert(handle_id, "5 Most Used Words and Associated Occurrences - Handle " + self.is_from_me_arr[is_from_me],
                                       counter.most_common(5))
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
@@ -539,7 +539,7 @@ class SQLStatCommandsDAO(DAO):
                 all_dates_as_string += " " + str(
                     time.strftime('%Y-%m-%d', time.localtime(int((rows[0] / 1000000000) + 978307200))))
             counter = Counter(all_dates_as_string.split())
-            self.generate_data_insert(34, "Insert Day with most texts count-General", counter.most_common(1))
+            self.generate_data_insert(34, "Day With Most Texts - Handle", counter.most_common(1))
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
 
@@ -554,7 +554,7 @@ class SQLStatCommandsDAO(DAO):
                 all_dates_as_string += " " + str(
                     time.strftime('%Y-%m-%d', time.localtime(int((rows[0] / 1000000000) + 978307200))))
             counter = Counter(all_dates_as_string.split())
-            self.generate_data_insert(handle_id, "Insert texts over time by handle", counter)
+            self.generate_data_insert(handle_id, "Texts Over Time - Handle", counter)
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
 
@@ -570,6 +570,6 @@ class SQLStatCommandsDAO(DAO):
                 all_dates_as_string += " " + str(
                     time.strftime('%Y-%m-%d', time.localtime(int((rows[0] / 1000000000) + 978307200))))
             counter = Counter(all_dates_as_string.split())
-            self.generate_data_insert(handle_id, "Insert texts over time by handle", counter)
+            self.generate_data_insert(handle_id, "Texts Over Time - Handle " + self.is_from_me_arr[is_from_me], counter)
         except (cx_Oracle.DatabaseError,TypeError) as e:
             print(e)
