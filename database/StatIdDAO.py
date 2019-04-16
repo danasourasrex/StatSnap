@@ -10,6 +10,9 @@ class StatIdDAO(DAO):
         command_string = "INSERT INTO STAT_ID (ID, HANDLE_ID) VALUES  (:1,:2)"
         self.cur.execute(command_string, (str(data.get_id()), str(data.get_handle_id())))
         self.con.commit()
+        command_string = 'select STAT_ID_SEQUENCE.currval from dual'
+        self.cur.execute(command_string)
+        return self.cur.fetchone()[0]
 
     def delete(self, data):
         command_string = "DELETE FROM STAT_ID WHERE ID = '" + data + "'"
