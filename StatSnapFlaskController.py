@@ -136,7 +136,7 @@ def get_list_of_occurences(stat_id):
 def get_stat_id(handle_id):
     stat_id_dao = StatIdDAO()
     list_of_stat_id = stat_id_dao.select_all(handle_id)
-
+    print(list_of_stat_id)
     return list_of_stat_id
 
 @app.route('/upload_file', methods = ['GET', 'POST'])
@@ -167,8 +167,7 @@ def login():
     if request.method == 'POST':
         if isValid(request.form['username'], request.form['password']):
             session['username'] = request.form['username']
-            has_uploaded = get_stat_id(session['username']) == None
-            if has_uploaded:
+            if not get_stat_id(session['username']):
                 return redirect(url_for('upload_file'))
             else:
                 print("HERRO")
