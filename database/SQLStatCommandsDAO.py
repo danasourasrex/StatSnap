@@ -9,7 +9,7 @@ from database.StatLookUpDAO import StatLookUpDAO
 import cx_Oracle
 
 class SQLStatCommandsDAO(DAO):
-    is_from_me_arr={"Not from me","Is from me"}
+    is_from_me_arr=["Not from me","From me"]
     def __init__(self, username):
         DAO.__init__(self)
         self.username = username
@@ -43,7 +43,8 @@ class SQLStatCommandsDAO(DAO):
             self.cur.execute(command_string)
         except cx_Oracle.DatabaseError as e:
             print(e)
-        self.generate_data_insert(9999999999999,"Average Message Length From Me",str(self.cur.fetchone()[0]))
+        self.generate_data_insert(9999999999999,"Average Message Length "+self.is_from_me_arr[is_from_me],str(self.cur.fetchone()[0]))
+
     def insert_longest_length_text_message_general(self):
         command_string = "SELECT TEXT_MESSAGE FROM MESSAGE WHERE LENGTH(TEXT_MESSAGE) = (SELECT MAX(LENGTH(TEXT_MESSAGE))from MESSAGE)"
         try:
@@ -58,7 +59,7 @@ class SQLStatCommandsDAO(DAO):
             self.cur.execute(command_string)
         except cx_Oracle.DatabaseError as e:
             print(e)
-        self.generate_data_insert(9999999999999,"Longest Message - General",self.cur.fetchone()[0])
+        self.generate_data_insert(9999999999999,"Longest Message "+self.is_from_me_arr[is_from_me],self.cur.fetchone()[0])
 
     def insert_minimum_length_text_message_general(self):
         command_string = "SELECT TEXT_MESSAGE FROM MESSAGE WHERE LENGTH(TEXT_MESSAGE) = (SELECT MIN(LENGTH(TEXT_MESSAGE))from MESSAGE)"
@@ -74,7 +75,7 @@ class SQLStatCommandsDAO(DAO):
             self.cur.execute(command_string)
         except cx_Oracle.DatabaseError as e:
             print(e)
-        self.generate_data_insert(9999999999999,"Shortest Message - Is From Me",self.cur.fetchone()[0])
+        self.generate_data_insert(9999999999999,"Shortest Message "+self.is_from_me_arr[is_from_me],self.cur.fetchone()[0])
 
     def insert_total_text_messages_general(self):
         command_string = "SELECT COUNT(*) FROM MESSAGE"
@@ -90,7 +91,7 @@ class SQLStatCommandsDAO(DAO):
             self.cur.execute(command_string)
         except cx_Oracle.DatabaseError as e:
             print(e)
-        self.generate_data_insert(9999999999999,"Total Texts - Is from Me",self.cur.fetchone()[0])
+        self.generate_data_insert(9999999999999,"Total Texts "+self.is_from_me_arr[is_from_me],self.cur.fetchone()[0])
 
     def insert_unique_numbers_general(self):
         command_string = "SELECT COUNT(DISTINCT(HANDLE_ID)) FROM MESSAGE"
@@ -111,7 +112,7 @@ class SQLStatCommandsDAO(DAO):
             self.cur.execute(command_string)
         except cx_Oracle.DatabaseError as e:
             print(e)
-        self.generate_data_insert(9999999999999,"Date first sent text",self.cur.fetchone()[0])
+        self.generate_data_insert(9999999999999,"Date first sent text "+self.is_from_me_arr[is_from_me],self.cur.fetchone()[0])
 
     def insert_profane_language_count_general(self):
         command_string = "SELECT TEXT_MESSAGE FROM MESSAGE"
@@ -135,7 +136,7 @@ class SQLStatCommandsDAO(DAO):
         for rows in self.cur.fetchall():
             if profanity.contains_profanity(rows[0]) and rows[0] is not None:
                 profane_language_count += 1
-        self.generate_data_insert(9999999999999,'Total Occurences of profane language from me',profane_language_count)
+        self.generate_data_insert(9999999999999,'Total Occurences of profane language from me'+self.is_from_me_arr[is_from_me],profane_language_count)
 
     def insert_most_common_word_general(self):
         command_string = "SELECT TEXT_MESSAGE FROM MESSAGE"
@@ -159,7 +160,7 @@ class SQLStatCommandsDAO(DAO):
         for rows in self.cur.fetchall():
             all_texts_as_string += " " + str(rows[0]).lower()
         counter = Counter(all_texts_as_string.split())
-        self.generate_data_insert(9999999999999,  "5 Most Used Words and Associated Occurences  - Sent",counter)
+        self.generate_data_insert(9999999999999,  "5 Most Used Words and Associated Occurences "+self.is_from_me_arr[is_from_me],str(counter.most_common(5)))
 
     def insert_day_with_most_texts_general(self):
         command_string = "SELECT DATE_OF_TEXT FROM MESSAGE"
@@ -183,7 +184,7 @@ class SQLStatCommandsDAO(DAO):
         for rows in self.cur.fetchall():
             all_dates_as_string += " " + str(time.strftime('%Y-%m-%d', time.localtime(int((rows[0] / 1000000000) + 978307200))))
         counter = Counter(all_dates_as_string.split())
-        self.generate_data_insert(9999999999999,  "Day With Most Texts  - Sent", counter)
+        self.generate_data_insert(9999999999999,  "Day With Most Texts "+self.is_from_me_arr[is_from_me], str(counter.most_common(1)))
 
     def insert_texts_over_time_general(self):
         command_string = "SELECT DATE_OF_TEXT FROM MESSAGE ORDER BY DATE_OF_TEXT ASC"
@@ -195,7 +196,7 @@ class SQLStatCommandsDAO(DAO):
         for rows in self.cur.fetchall():
             all_dates_as_string += " " + str(time.strftime('%Y-%m-%d', time.localtime(int((rows[0] / 1000000000) + 978307200))))
         counter = Counter(all_dates_as_string.split())
-        self.generate_data_insert(9999999999999,"Texts Over Time _ General",counter)
+        self.generate_data_insert(9999999999999,"Texts Over Time General",counter)
 
     def insert_texts_over_time_general_is_from_me(self, is_from_me):
         command_string = "SELECT DATE_OF_TEXT FROM MESSAGE WHERE IS_FROM_ME = "+ str(is_from_me) +" ORDER BY DATE_OF_TEXT ASC"
@@ -207,7 +208,7 @@ class SQLStatCommandsDAO(DAO):
         for rows in self.cur.fetchall():
             all_dates_as_string += " " + str(time.strftime('%Y-%m-%d', time.localtime(int((rows[0] / 1000000000) + 978307200))))
         counter = Counter(all_dates_as_string.split())
-        self.generate_data_insert(9999999999999,"Texts Over Time _ is From Me",(counter))
+        self.generate_data_insert(9999999999999,"Texts Over Time "+self.is_from_me_arr[is_from_me],(counter))
 
     def insert_most_frequently_spoken_to_general(self):
         command_string = "select PHONE_NUMBER from HANDLE where HANDLE_ID = (select HANDLE_ID from (select HANDLE_ID, count(HANDLE_ID) as occurance from message group by HANDLE_ID order by count(HANDLE_ID) desc) where occurance = (select max(occurance) as most_messages from (select HANDLE_ID, count(HANDLE_ID) as occurance from message group by HANDLE_ID order by count(HANDLE_ID) desc)))"
