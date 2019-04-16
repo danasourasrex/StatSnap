@@ -14,10 +14,13 @@ class ExpandedDataDAO(DAO):
     def select(self, key):
         command_string = "SELECT * FROM EXPANDED_DATA WHERE STAT_ID = " + str(key)
         self.cur.execute(command_string)
-        row = self.cur.fetchone()
-        expanded_data = ExpandedData()
-        expanded_data.set_values_from_row(row)
-        return expanded_data
+        expanded_data_list = []
+        for rows in self.cur.fetchall():
+            expanded_data = ExpandedData()
+            expanded_data.set_values_from_row(rows)
+            expanded_data_list.append(expanded_data)
+
+        return expanded_data_list
 
     def delete(self, key):
         command_string = "DELETE FROM EXPANDED_DATA WHERE STAT_ID = " + str(key)
