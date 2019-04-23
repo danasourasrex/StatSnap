@@ -77,7 +77,6 @@ def generate_data(dao):
     list_of_handle_ids=handle_dao.select_distinct_handle_ids(dao.username)
 
     for handle in list_of_handle_ids:
-        print (handle)
         dao.insert_avg_message_length_by_handle(handle)
         dao.insert_avg_message_length_by_handle_is_from_me(handle,0)
         dao.insert_avg_message_length_by_handle_is_from_me(handle,1)
@@ -173,7 +172,6 @@ def login():
             if not get_stat_id(session['username']):
                 return redirect(url_for('upload_file'))
             else:
-                print("HERRO")
                 return redirect(url_for('index'))
 
 
