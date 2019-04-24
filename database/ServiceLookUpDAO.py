@@ -6,6 +6,14 @@ class ServiceLookUpDAO(DAO):
     def __init__(self):
         DAO.__init__(self)
 
+    def batch_insert(self, item):
+        command_string = "INSERT INTO SERVICE_LOOKUP(USER_ID, PHONE_NUMBER, SERVICE) VALUES (:1,:2, :3)"
+        self.cur.execute(command_string,
+                         (str(item.get_user_id()), str(item.get_phone_number()), str(item.get_service())))
+
+    def batch_commit(self):
+        self.con.commit()
+
     def insert(self, item):
         command_string = "INSERT INTO SERVICE_LOOKUP(USER_ID, PHONE_NUMBER, SERVICE) VALUES (:1,:2, :3)"
         self.cur.execute(command_string, (str(item.get_user_id()),str(item.get_phone_number()), str(item.get_service())))

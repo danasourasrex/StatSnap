@@ -7,6 +7,16 @@ class MessageDAO(DAO):
     def __init__(self):
         DAO.__init__(self)
 
+    def batch_insert(self, item):
+        command_string = "INSERT INTO MESSAGE (USER_ID, HANDLE_ID,TEXT_MESSAGE,IS_FROM_ME,DATE_OF_TEXT)\
+                 VALUES  (:1,:2,:3,:4,:5)"
+        self.cur.execute(command_string,
+                         (str(item.get_user_id()), str(item.get_handle_id()), str(item.get_text_message()), \
+                          str(item.get_is_from_me()), str(item.get_date_of_text())))
+
+    def batch_commit(self):
+        self.con.commit()
+
     def insert(self, item):
         command_string = "INSERT INTO MESSAGE (USER_ID, HANDLE_ID,TEXT_MESSAGE,IS_FROM_ME,DATE_OF_TEXT)\
          VALUES  (:1,:2,:3,:4,:5)"

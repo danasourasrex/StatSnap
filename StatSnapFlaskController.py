@@ -205,14 +205,26 @@ def test_charts():
 
     # this is hands down the worst unmaintainable hardcoded garbage code I have ever written lmao
     # favorite words not from me
+
     fav_words_not_from_me_labels = list()
+    fav_words_not_from_me_data = list()
+    fav_words_from_me_labels = list()
+    fav_words_from_me_data = list()
+    for x in range(len(list_of_stats)):
+        if list_of_stats[x][3] == '5 Most Used Words and Associated Occurrences - General Not From Me':
+            fav_words_not_from_me_labels.append(list_of_stats[x][4])
+            fav_words_not_from_me_labels.append(list_of_stats[x][5])
+        if list_of_stats[x][3] == '5 Most Used Words and Associated Occurrences - General From Me':
+            fav_words_from_me_labels.append(list_of_stats[x][4])
+            fav_words_from_me_labels.append(list_of_stats[x][5])
+    '''      
     fav_words_not_from_me_labels.append(list_of_stats[3][4])
     fav_words_not_from_me_labels.append(list_of_stats[4][4])
     fav_words_not_from_me_labels.append(list_of_stats[5][4])
     fav_words_not_from_me_labels.append(list_of_stats[6][4])
     fav_words_not_from_me_labels.append(list_of_stats[7][4])
-
-    fav_words_not_from_me_data = list()
+    
+    
     fav_words_not_from_me_data.append(list_of_stats[3][5])
     fav_words_not_from_me_data.append(list_of_stats[4][5])
     fav_words_not_from_me_data.append(list_of_stats[5][5])
@@ -220,20 +232,20 @@ def test_charts():
     fav_words_not_from_me_data.append(list_of_stats[7][5])
 
     # Favorite Words from me
-    fav_words_from_me_labels = list()
+
     fav_words_from_me_labels.append(list_of_stats[8][4])
     fav_words_from_me_labels.append(list_of_stats[9][4])
     fav_words_from_me_labels.append(list_of_stats[10][4])
     fav_words_from_me_labels.append(list_of_stats[11][4])
     fav_words_from_me_labels.append(list_of_stats[12][4])
 
-    fav_words_from_me_data = list()
+
     fav_words_from_me_data.append(list_of_stats[8][5])
     fav_words_from_me_data.append(list_of_stats[9][5])
     fav_words_from_me_data.append(list_of_stats[10][5])
     fav_words_from_me_data.append(list_of_stats[11][5])
     fav_words_from_me_data.append(list_of_stats[12][5])
-
+    '''
     average_message_length_general = 0
     total_messages_general = 0
     unique_numbers = 0
