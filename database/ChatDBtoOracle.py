@@ -1,4 +1,3 @@
-
 from database.MessageDAO import MessageDAO
 from database.Message import Message
 from database.Handle import Handle
@@ -53,12 +52,3 @@ class ChatDBtoOracle():
             service_look_up_dao.batch_insert(service_look_up)
         service_look_up_dao.batch_commit()
         print("ALL DONE")
-
-
-
-
-
-
-
-
-

@@ -6,13 +6,16 @@ class StatIdDAO(DAO):
     def __init__(self):
         DAO.__init__(self)
 
-    def insert(self, data):
+    def batch_insert(self, data):
         command_string = "INSERT INTO STAT_ID (ID, HANDLE_ID) VALUES  (:1,:2)"
         self.cur.execute(command_string, (str(data.get_id()), str(data.get_handle_id())))
         self.con.commit()
         command_string = 'select STAT_ID_SEQUENCE.currval from dual'
         self.cur.execute(command_string)
         return self.cur.fetchone()[0]
+
+    def batch_commit(self):
+        self.con.commit()
 
     def delete(self, data):
         command_string = "DELETE FROM STAT_ID WHERE ID = '" + data + "'"

@@ -6,10 +6,13 @@ class ExpandedDataDAO(DAO):
     def __init__(self):
         DAO.__init__(self)
 
-    def insert(self, item):
+    def batch_insert(self, item):
         command_string = "INSERT INTO EXPANDED_DATA (STAT_ID, DATA, OCCURRENCES) VALUES  (:1,:2,:3)"
         self.cur.execute(command_string, (item.get_stat_id(), str(item.get_data()), item.get_occurrences()))
+
+    def batch_commit(self):
         self.con.commit()
+
 
     def select(self, key):
         command_string = "SELECT * FROM EXPANDED_DATA WHERE STAT_ID = " + str(key)

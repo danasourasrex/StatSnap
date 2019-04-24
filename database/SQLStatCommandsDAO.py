@@ -25,7 +25,7 @@ class SQLStatCommandsDAO(DAO):
         stat_id_obj = StatId()
         stat_id_obj.set_handle_id(stat_id)
         stat_id_obj.set_id(str(self.username))
-        id = stat_id_dao.insert(stat_id_obj)
+        id = stat_id_dao.batch_insert(stat_id_obj)
         stat_look_up = StatLookup()
         stat_look_up_dao = StatLookUpDAO()
         stat_look_up.set_stat_name(str(stat_name))
@@ -33,27 +33,27 @@ class SQLStatCommandsDAO(DAO):
 
         if isinstance(data, list):
             stat_look_up.set_data(None)
-            stat_look_up_dao.insert(stat_look_up)
+            stat_look_up_dao.batch_insert(stat_look_up)
             expand_data_dao = ExpandedDataDAO()
             for d in data:
                 expand_data = ExpandedData()
                 expand_data.set_stat_id(id)
                 expand_data.set_occurrences(int(d[1]))
                 expand_data.set_data(d[0])
-                expand_data_dao.insert(expand_data)
+                expand_data_dao.batch_insert(expand_data)
         elif isinstance(data, Counter):
             stat_look_up.set_data(None)
-            stat_look_up_dao.insert(stat_look_up)
+            stat_look_up_dao.batch_insert(stat_look_up)
             expand_data_dao = ExpandedDataDAO()
             for iter_data in data:
                 expand_data = ExpandedData()
                 expand_data.set_stat_id(id)
                 expand_data.set_occurrences(data[iter_data])
                 expand_data.set_data(iter_data)
-                expand_data_dao.insert(expand_data)
+                expand_data_dao.batch_insert(expand_data)
         else:
             stat_look_up.set_data(str(data))
-            stat_look_up_dao.insert(stat_look_up)
+            stat_look_up_dao.batch_insert(stat_look_up)
 
     def insert_avg_message_length_general(self):
         command_string = "SELECT ROUND(AVG((LENGTH(TEXT_MESSAGE)))) AS AVERGAE_MESSAGE_SIZE \
