@@ -29,7 +29,7 @@ class ChatDBtoOracle():
             count += 1
             if count % 100 == 0:
                 print(count)
-            if count > 3000:
+            if count > 500:
                 break
         messageDAO.batch_commit()
 

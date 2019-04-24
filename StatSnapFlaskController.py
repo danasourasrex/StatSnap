@@ -29,9 +29,7 @@ def allowed_file(filename):
 
 
 def generate_data(dao):
-    stat_id_dao = StatIdDAO()
-    stat_look_up_dao = StatLookUpDAO()
-    expanded_data_dao = ExpandedDataDAO()
+
 
     dao.insert_avg_message_length_general()
     dao.insert_avg_message_length_general_is_from_me(0)
@@ -102,9 +100,8 @@ def generate_data(dao):
         dao.insert_most_common_word_by_handle_is_from_me(handle,0)
         dao.insert_most_common_word_by_handle_is_from_me(handle,1)
         dao.insert_day_with_most_texts_by_handle(handle)
-    stat_id_dao.batch_commit()
-    stat_look_up_dao.batch_commit()
-    expanded_data_dao.batch_commit()
+    dao.batch_commit_stat_expanded()
+
 
 
 @app.route('/')
@@ -116,7 +113,6 @@ def index():
     if request.method=='POST':
         return "hi MIKE"
     elif request.method=='GET':
-        #list_of_data=get_data_from_stats(get_stat_id(session['username']))
         list_of_messages = get_all_user_messages(str(session['username']))
         return render_template('index.html',**locals())
 
