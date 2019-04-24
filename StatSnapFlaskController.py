@@ -11,7 +11,7 @@ from database.ExpandedDataDAO import ExpandedDataDAO
 from database.HandleDAO import HandleDAO
 from database.Handle import Handle
 from database.MessageDAO import MessageDAO
-
+from database.StatIdStatLookUpExpandedDataDAO import StatIdStatLookUpExpandedDataDAO
 from database.StatLookup import StatLookup
 
 
@@ -187,6 +187,139 @@ def create_account():
         return redirect(url_for('login'))
 
     return render_template("create_account.html")
+
+
+@app.route('/testcharts', methods=['GET', 'POST'])
+def test_charts():
+    stats_dao = StatIdStatLookUpExpandedDataDAO()
+    list_of_stats = stats_dao.return_expanded_data_stats(str(session['username']))
+    #print(len(list_of_stats))
+    #print("########")
+    #for x in range(len(list_of_stats)):
+    #    print(list_of_stats[x])
+    #print("########")
+    list_of_other_stats = stats_dao.return_all_none_stats(str(session['username']))
+    #for x in range(len(list_of_other_stats)):
+    #    print(list_of_other_stats[x])
+    #print("########")
+
+    # this is hands down the worst unmaintainable hardcoded garbage code I have ever written lmao
+    # favorite words not from me
+    fav_words_not_from_me_labels = list()
+    fav_words_not_from_me_labels.append(list_of_stats[3][4])
+    fav_words_not_from_me_labels.append(list_of_stats[4][4])
+    fav_words_not_from_me_labels.append(list_of_stats[5][4])
+    fav_words_not_from_me_labels.append(list_of_stats[6][4])
+    fav_words_not_from_me_labels.append(list_of_stats[7][4])
+
+    fav_words_not_from_me_data = list()
+    fav_words_not_from_me_data.append(list_of_stats[3][5])
+    fav_words_not_from_me_data.append(list_of_stats[4][5])
+    fav_words_not_from_me_data.append(list_of_stats[5][5])
+    fav_words_not_from_me_data.append(list_of_stats[6][5])
+    fav_words_not_from_me_data.append(list_of_stats[7][5])
+
+    # Favorite Words from me
+    fav_words_from_me_labels = list()
+    fav_words_from_me_labels.append(list_of_stats[8][4])
+    fav_words_from_me_labels.append(list_of_stats[9][4])
+    fav_words_from_me_labels.append(list_of_stats[10][4])
+    fav_words_from_me_labels.append(list_of_stats[11][4])
+    fav_words_from_me_labels.append(list_of_stats[12][4])
+
+    fav_words_from_me_data = list()
+    fav_words_from_me_data.append(list_of_stats[8][5])
+    fav_words_from_me_data.append(list_of_stats[9][5])
+    fav_words_from_me_data.append(list_of_stats[10][5])
+    fav_words_from_me_data.append(list_of_stats[11][5])
+    fav_words_from_me_data.append(list_of_stats[12][5])
+
+    average_message_length_general = 0
+    total_messages_general = 0
+    unique_numbers = 0
+    for x in range(len(list_of_other_stats)):
+        if list_of_other_stats[x][4] == 'Average Message Length - General':
+            average_message_length_general = int(list_of_other_stats[x][5])
+        if list_of_other_stats[x][4] == 'Total Texts - General':
+            total_messages_general = int(list_of_other_stats[x][5])
+        if list_of_other_stats[x][4] == 'Unique Numbers - General':
+            unique_numbers = int(list_of_other_stats[x][5])
+
+    # Texts over time setup
+    texts_over_time = list()
+    for x in range(len(list_of_stats)):
+        if list_of_stats[x][3] == 'Texts Over Time - General':
+            texts_over_time.append([list_of_stats[x][4], list_of_stats[x][5]])
+    num_datapoints_tot = len(texts_over_time)
+
+
+    # days with most text
+    day_with_most_texts_general = 0
+    day_with_most_texts_general_number = 0
+    day_with_most_texts_rec = 0
+    day_with_most_texts_rec_number = 0
+    day_with_most_texts_sent = 0
+    day_with_most_texts_sent_number = 0
+    for x in range(len(list_of_stats)):
+        if list_of_stats[x][3] == 'Day With Most Texts - General':
+            day_with_most_texts_general = list_of_stats[x][4]
+            day_with_most_texts_general_number = list_of_stats[x][5]
+        if list_of_stats[x][3] == 'Day With Most Texts - General Not From Me':
+            day_with_most_texts_rec = list_of_stats[x][4]
+            day_with_most_texts_rec_number = list_of_stats[x][5]
+        if list_of_stats[x][3] == 'Day With Most Texts - General From Me':
+            day_with_most_texts_sent = list_of_stats[x][4]
+            day_with_most_texts_sent_number = list_of_stats[x][5]
+
+    # profane language
+    total_profane_lang = 0
+    profane_sent = 0
+    profane_rec = 0
+    for x in range(len(list_of_other_stats)):
+        if list_of_other_stats[x][4] == 'Total Occurrences of Profane Language - General':
+            total_profane_lang = int(list_of_other_stats[x][5])
+        if list_of_other_stats[x][4] == 'Total Occurrences of Profane Language - General Not From Me':
+            profane_rec = int(list_of_other_stats[x][5])
+        if list_of_other_stats[x][4] == 'Total Occurrences of Profane Language - General From Me':
+            profane_sent = int(list_of_other_stats[x][5])
+
+    # most frequently spoken to
+    most_freq_spoken_general = ''
+    most_freq_spoken_from = ''
+    most_freq_spoken_to = ''
+    for x in range(len(list_of_other_stats)):
+        if list_of_other_stats[x][4] == 'Most Frequently Spoken To - General':
+            most_freq_spoken_general = str(list_of_other_stats[x][5])
+        if list_of_other_stats[x][4] == 'Most Messages From - General':
+            most_freq_spoken_from = str(list_of_other_stats[x][5])
+        if list_of_other_stats[x][4] == 'Most Messages To - General':
+            most_freq_spoken_to = str(list_of_other_stats[x][5])
+
+    # sent vs received
+    messages_sent_general = 0
+    messages_received_general = 0
+    for x in range(len(list_of_other_stats)):
+        if list_of_other_stats[x][4] == 'Total Texts - General Not From Me':
+            messages_received_general = str(list_of_other_stats[x][5])
+        if list_of_other_stats[x][4] == 'Total Texts - General From Me':
+            messages_sent_general = str(list_of_other_stats[x][5])
+
+    # longest/Shortest Message receieved
+    shortest_message = ''
+    longest_message = ''
+    for x in range(len(list_of_other_stats)):
+        if list_of_other_stats[x][4] == 'Shortest Message - General':
+            shortest_message = str(list_of_other_stats[x][5])
+        if list_of_other_stats[x][4] == 'Longest Message - General':
+            longest_message = str(list_of_other_stats[x][5])
+
+
+    return render_template("charts.html", **locals())
+
+
+@app.route('/faq', methods=['GET'])
+def charts():
+    return render_template("faq.html")
 
 
 def isValid(username,password):
