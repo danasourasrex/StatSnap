@@ -7,8 +7,8 @@ class ServiceLookUpDAO(DAO):
         DAO.__init__(self)
 
     def insert(self, item):
-        command_string = "INSERT INTO SERVICE_LOOKUP(PHONE_NUMBER, SERVICE) VALUES (:1,:2)"
-        self.cur.execute(command_string, (str(item.get_phone_number()), str(item.get_service())))
+        command_string = "INSERT INTO SERVICE_LOOKUP(USER_ID, PHONE_NUMBER, SERVICE) VALUES (:1,:2, :3)"
+        self.cur.execute(command_string, (str(item.get_user_id()),str(item.get_phone_number()), str(item.get_service())))
         self.con.commit()
 
     def delete(self, data):
