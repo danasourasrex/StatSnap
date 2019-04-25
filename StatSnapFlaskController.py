@@ -100,6 +100,7 @@ def generate_data(dao):
         dao.insert_most_common_word_by_handle_is_from_me(handle,0)
         dao.insert_most_common_word_by_handle_is_from_me(handle,1)
         dao.insert_day_with_most_texts_by_handle(handle)
+        dao.insert_texts_over_time_by_handle(handle)
     dao.batch_commit_stat_expanded()
 
 
@@ -190,9 +191,114 @@ def create_account():
 
     return render_template("create_account.html")
 
+@app.route('/testhandlecharts', methods=['GET','POST'])
+def test_handle_charts(handle=0):
+    if request.method == 'POST':
+        print(request.form['handle_selector'])
+        print('POST')
+        handle = request.form['handle_selector']
+    # for testing
+    print('were running')
+    session['username'] = 'dsmolinski'
+    stats_dao = StatIdStatLookUpExpandedDataDAO()
+    list_of_stats = stats_dao.return_expanded_data_stats(str(session['username']))
+    list_of_other_stats = stats_dao.return_all_none_stats(str(session['username']))
+
+    # get distinct handles
+    unique_handles = list()
+    for x in range(len(list_of_stats)):
+        found = False
+        for handle2 in unique_handles:
+            if handle2 == list_of_stats[x][2]:
+                found = True
+        if not found:
+            unique_handles.append(list_of_stats[x][2])
+    unique_handles.remove('9999999999999')
+    for x in range(len(unique_handles)):
+        unique_handles[x] = int(unique_handles[x])
+    unique_handles.sort()
+    for x in range(len(unique_handles)):
+        unique_handles[x] = str(unique_handles[x])
+    print(unique_handles)
+    num_handles = len(unique_handles)
+
+
+    list_of_stats_filtered = list()
+    list_of_other_stats_filtered = list()
+    print('FUCK')
+    for x in range(len(list_of_stats)):
+        #print(list_of_stats[x][2])
+        if list_of_stats[x][2] == str(handle):
+            print(list_of_stats[x])
+            list_of_stats_filtered.append(list_of_stats[x])
+    print('SHIT')
+    for x in range(len(list_of_other_stats)):
+        if list_of_other_stats[x][2] == str(handle):
+            print(list_of_other_stats[x])
+            list_of_other_stats_filtered.append(list_of_other_stats[x])
+    print('BALLS')
+    # Texts over time setup
+    texts_over_time = list()
+    for x in range(len(list_of_stats_filtered)):
+        if list_of_stats_filtered[x][3] == 'Texts Over Time - Handle':
+            texts_over_time.append([list_of_stats_filtered[x][4], list_of_stats_filtered[x][5]])
+    num_datapoints_tot = len(texts_over_time)
+    for x in range(num_datapoints_tot):
+        print(texts_over_time[x])
+
+    fav_words_not_from_me_labels = list()
+    fav_words_not_from_me_data = list()
+    fav_words_from_me_labels = list()
+    fav_words_from_me_data = list()
+    for x in range(len(list_of_stats_filtered)):
+        if list_of_stats_filtered[x][3] == '5 Most Used Words and Associated Occurrences - Handle':
+            fav_words_not_from_me_labels.append(list_of_stats_filtered[x][4])
+            fav_words_not_from_me_data.append(list_of_stats_filtered[x][5])
+        if list_of_stats_filtered[x][3] == '5 Most Used Words and Associated Occurrences - Handle Not From Me':
+            fav_words_from_me_labels.append(list_of_stats_filtered[x][4])
+            fav_words_from_me_data.append(list_of_stats_filtered[x][5])
+
+    # profane language
+    total_profane_lang = 0
+    profane_sent = 0
+    profane_rec = 0
+    for x in range(len(list_of_other_stats_filtered)):
+        print(list_of_other_stats_filtered[x][4:])
+        if list_of_other_stats_filtered[x][4] == 'Total Occurrences of Profane Language - Handle':
+            print('found')
+            total_profane_lang = int(list_of_other_stats_filtered[x][5])
+        if list_of_other_stats_filtered[x][4] == 'Total Occurrences of Profane Language - Handle Not From Me':
+            profane_rec = int(list_of_other_stats_filtered[x][5])
+        if list_of_other_stats_filtered[x][4] == 'Total Occurrences of Profane Language - Handle From Me':
+            profane_sent = int(list_of_other_stats_filtered[x][5])
+
+    average_message_length_general = 0
+    total_messages_general = 0
+    date_of_first_text = ''
+    for x in range(len(list_of_other_stats_filtered)):
+        if list_of_other_stats_filtered[x][4] == 'Average Message Length - Handle':
+            average_message_length_general = int(list_of_other_stats_filtered[x][5])
+        if list_of_other_stats_filtered[x][4] == 'Total Texts - Handle':
+            total_messages_general = int(list_of_other_stats_filtered[x][5])
+        if list_of_other_stats_filtered[x][4] == 'Date of First Text - Handle':
+            date_of_first_text = str(list_of_other_stats_filtered[x][5])
+
+        # longest/Shortest Message received
+        shortest_message = ''
+        longest_message = ''
+        for x in range(len(list_of_other_stats_filtered)):
+            if list_of_other_stats_filtered[x][4] == 'Shortest Message - Handle':
+                shortest_message = str(list_of_other_stats_filtered[x][5])
+            if list_of_other_stats_filtered[x][4] == 'Longest Message - Handle':
+                longest_message = str(list_of_other_stats_filtered[x][5])
+    for stat in list_of_other_stats_filtered:
+        print(stat)
+    return render_template('handle_charts.html', **locals())
+
 
 @app.route('/testcharts', methods=['GET', 'POST'])
 def test_charts():
+    session['username'] = 'dsmolinski'
     stats_dao = StatIdStatLookUpExpandedDataDAO()
     list_of_stats = stats_dao.return_expanded_data_stats(str(session['username']))
     #print(len(list_of_stats))
@@ -201,9 +307,9 @@ def test_charts():
     #    print(list_of_stats[x])
     #print("########")
     list_of_other_stats = stats_dao.return_all_none_stats(str(session['username']))
-    #for x in range(len(list_of_other_stats)):
-    #    print(list_of_other_stats[x])
-    #print("########")
+   # for x in range(len(list_of_other_stats)):
+   #     print(list_of_other_stats[x])
+   # print("########")
 
     # this is hands down the worst unmaintainable hardcoded garbage code I have ever written lmao
     # favorite words not from me
@@ -215,39 +321,11 @@ def test_charts():
     for x in range(len(list_of_stats)):
         if list_of_stats[x][3] == '5 Most Used Words and Associated Occurrences - General Not From Me':
             fav_words_not_from_me_labels.append(list_of_stats[x][4])
-            fav_words_not_from_me_labels.append(list_of_stats[x][5])
+            fav_words_not_from_me_data.append(list_of_stats[x][5])
         if list_of_stats[x][3] == '5 Most Used Words and Associated Occurrences - General From Me':
             fav_words_from_me_labels.append(list_of_stats[x][4])
-            fav_words_from_me_labels.append(list_of_stats[x][5])
-    '''      
-    fav_words_not_from_me_labels.append(list_of_stats[3][4])
-    fav_words_not_from_me_labels.append(list_of_stats[4][4])
-    fav_words_not_from_me_labels.append(list_of_stats[5][4])
-    fav_words_not_from_me_labels.append(list_of_stats[6][4])
-    fav_words_not_from_me_labels.append(list_of_stats[7][4])
-    
-    
-    fav_words_not_from_me_data.append(list_of_stats[3][5])
-    fav_words_not_from_me_data.append(list_of_stats[4][5])
-    fav_words_not_from_me_data.append(list_of_stats[5][5])
-    fav_words_not_from_me_data.append(list_of_stats[6][5])
-    fav_words_not_from_me_data.append(list_of_stats[7][5])
+            fav_words_from_me_data.append(list_of_stats[x][5])
 
-    # Favorite Words from me
-
-    fav_words_from_me_labels.append(list_of_stats[8][4])
-    fav_words_from_me_labels.append(list_of_stats[9][4])
-    fav_words_from_me_labels.append(list_of_stats[10][4])
-    fav_words_from_me_labels.append(list_of_stats[11][4])
-    fav_words_from_me_labels.append(list_of_stats[12][4])
-
-
-    fav_words_from_me_data.append(list_of_stats[8][5])
-    fav_words_from_me_data.append(list_of_stats[9][5])
-    fav_words_from_me_data.append(list_of_stats[10][5])
-    fav_words_from_me_data.append(list_of_stats[11][5])
-    fav_words_from_me_data.append(list_of_stats[12][5])
-    '''
     average_message_length_general = 0
     total_messages_general = 0
     unique_numbers = 0
@@ -261,9 +339,15 @@ def test_charts():
 
     # Texts over time setup
     texts_over_time = list()
+    texts_over_time_rec = list()
+    texts_over_time_sent = list()
     for x in range(len(list_of_stats)):
         if list_of_stats[x][3] == 'Texts Over Time - General':
             texts_over_time.append([list_of_stats[x][4], list_of_stats[x][5]])
+        if list_of_stats[x][3] == 'Texts Over Time - General Not From Me':
+            texts_over_time_rec.append([list_of_stats[x][4], list_of_stats[x][5]])
+        if list_of_stats[x][3] == 'Texts Over Time - General From Me':
+            texts_over_time_sent.append([list_of_stats[x][4], list_of_stats[x][5]])
     num_datapoints_tot = len(texts_over_time)
 
 
@@ -298,11 +382,12 @@ def test_charts():
             profane_sent = int(list_of_other_stats[x][5])
 
     # most frequently spoken to
-    most_freq_spoken_general = ''
-    most_freq_spoken_from = ''
-    most_freq_spoken_to = ''
+    most_freq_spoken_general = 'Not Found'
+    most_freq_spoken_from = 'Not Found'
+    most_freq_spoken_to = 'Not Found'
     for x in range(len(list_of_other_stats)):
         if list_of_other_stats[x][4] == 'Most Frequently Spoken To - General':
+            print('Most Frequently Spoken To - General')
             most_freq_spoken_general = str(list_of_other_stats[x][5])
         if list_of_other_stats[x][4] == 'Most Messages From - General':
             most_freq_spoken_from = str(list_of_other_stats[x][5])
@@ -318,7 +403,7 @@ def test_charts():
         if list_of_other_stats[x][4] == 'Total Texts - General From Me':
             messages_sent_general = str(list_of_other_stats[x][5])
 
-    # longest/Shortest Message receieved
+    # longest/Shortest Message received
     shortest_message = ''
     longest_message = ''
     for x in range(len(list_of_other_stats)):

@@ -29,9 +29,8 @@
 </nav>
 
 <h1 class = "center thin">Statistics</h1>
+<h4 class = "center thin">For Handle {{handle}}.</h4>
 <div class = "container z-depth-1">
-
-    <div class = "white">
 <div class = "row">
         <div class = "col s6">
 
@@ -45,13 +44,6 @@
     </div>
         <hr>
         <div class = "row">
-        <div class = "col s12">
-
-            <canvas id="messages_over_time"></canvas>
-        </div>
-        </div>
-<hr>
-            <div class = "row">
 
             <div class = "col s4">
             <h5 class = "center">Average Message Length</h5>
@@ -62,34 +54,12 @@
                 <h3 class = "center thin">{{total_messages_general}}</h3>
         </div>
             <div class = "col s4">
-            <h5 class = "center">Unique Numbers</h5>
-                <h3 class = "center thin">{{unique_numbers}}</h3>
+            <h5 class = "center">Date Of First Text</h5>
+                <h4 class = "center thin">{{date_of_first_text}}</h4>
         </div>
-
         </div>
-        <hr>
-        <div class = "row">
-            <div class = "col s4">
-            <h5 class = "center">Most Messages <br> In A Day</h5>
-                <h3 class = "center thin">{{day_with_most_texts_general_number}}</h3>
-                <h5 class = "center thin">{{day_with_most_texts_general}}</h5>
-
-        </div>
-            <div class = "col s4">
-            <h5 class = "center">Most Messages Sent <br> In A Day</h5>
-                <h3 class = "center thin">{{day_with_most_texts_sent_number}}</h3>
-                <h5 class = "center thin">{{day_with_most_texts_sent}}</h5>
-        </div>
-            <div class = "col s4">
-            <h5 class = "center">Most Messages Received <br> In A Day</h5>
-                <h3 class = "center thin">{{day_with_most_texts_rec_number}}</h3>
-                <h5 class = "center thin">{{day_with_most_texts_rec}}</h5>
-        </div>
-
-
-        </div>
-        <hr>
-        <div class = "row">
+<hr>
+    <div class = "row">
             <div class = "col s4">
             <h5 class = "center">Profane Language <br>Count</h5>
                 <h3 class = "center thin">{{total_profane_lang}}</h3>
@@ -110,35 +80,7 @@
 
         </div>
         <hr>
-        <div class = "row">
-            <div class = "col s4">
-            <h5 class = "center">Most Spoken To</h5>
-                <h5 class = "center thin">{{most_freq_spoken_general}}</h5>
-
-
-        </div>
-            <div class = "col s4">
-            <h5 class = "center">Most Messages To</h5>
-                <h5 class = "center thin">{{most_freq_spoken_to}}</h5>
-
-        </div>
-            <div class = "col s4">
-            <h5 class = "center">Most Messages From</h5>
-                <h5 class = "center thin">{{most_freq_spoken_from}}</h5>
-
-        </div>
-
-
-        </div>
-        <hr>
-        <div class = "row">
-        <div class = "col s12">
-
-            <canvas id="sent_vs_rec"></canvas>
-        </div>
-        </div>
-        <hr>
-        <div class = "row">
+    <div class = "row">
             <div class = "col s6">
             <h5 class = "center">Shortest Message</h5>
                 <h5 class = "center thin">{{shortest_message}}</h5>
@@ -154,12 +96,33 @@
 
 
     </div>
-</div>
-</div>
+    <hr>
+        <div class = "row">
+        <div class = "col s12">
 
+            <canvas id="messages_over_time"></canvas>
+        </div>
+        </div>
+<hr>
+     <form method="POST"><fieldset>
+         {%for y in range(num_handles)%}
+
+    <p>
+      <label>
+        <input name="handle_selector" value="{{unique_handles[y]}}" type="radio"{%if y == handle%} checked {%endif%}/>
+        <span>{{unique_handles[y]}}</span>
+      </label>
+    </p>
+
+        {%endfor%}
+     </fieldset>
+         <input type="submit" value="Submit">
+  </form>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script>
-    new Chart(document.getElementById("5favorite_words_nfm"), {
+new Chart(document.getElementById("5favorite_words_nfm"), {
     type: 'doughnut',
     data: {
       labels: ["{{fav_words_not_from_me_labels[0]}}", "{{fav_words_not_from_me_labels[1]}}", "{{fav_words_not_from_me_labels[2]}}","{{fav_words_not_from_me_labels[3]}}","{{fav_words_not_from_me_labels[4]}}"],
@@ -198,52 +161,21 @@ var ctx = document.getElementById('messages_over_time').getContext('2d');
 var chart = new Chart(ctx, {
     // The type of chart we want to create
     type: 'line',
-
     // The data for our dataset
     data: {
         labels: [{% for x in range(num_datapoints_tot)%} '{{texts_over_time[x][0]}}',{%endfor%}],
-        datasets: [
-            {
-            label: 'Messages Sent Over Time',
-            borderColor: 'rgb(49, 255, 90)',
-            data: [{% for x in range(num_datapoints_tot)%} {{texts_over_time_sent[x][1]}},{%endfor%}]
-        },
-    {
-            label: 'Messages Received Over Time',
-            borderColor: 'rgb(255, 38, 90)',
-            data: [{% for x in range(num_datapoints_tot)%} {{texts_over_time_rec[x][1]}},{%endfor%}]
-        },
-    {
+        datasets: [{
             label: 'Messages Over Time',
             backgroundColor: '#8e5ea2',
             borderColor: 'rgb(49, 38, 90)',
             data: [{% for x in range(num_datapoints_tot)%} {{texts_over_time[x][1]}},{%endfor%}]
-        }
-    ]
+        }]
     },
-
     // Configuration options go here
     options: {title: {
         display: true,
         text: 'Messages Over Time'
       }}
-});
-new Chart(document.getElementById("sent_vs_rec"), {
-    type: 'doughnut',
-    data: {
-      labels: ["Sent", "Recieved"],
-      datasets: [{
-        label: "Most Used Words Sent To You",
-        backgroundColor: ["#3e95cd", "#8e5ea2"],
-        data: [{{messages_sent_general}},{{messages_received_general}}]
-      }]
-    },
-    options: {
-      title: {
-        display: true,
-        text: 'Sent vs Received Messages'
-      }
-    }
 });
 </script>
 <footer class="page-footer blue darken-4">
