@@ -25,19 +25,27 @@ class ChatDBtoOracle():
         for rows in acceptable_messages:
             message = Message()
             message.set_values_from_row([str(username), rows[1], self.deEmojify(rows[0]), rows[2], rows[3]])
-            messageDAO.batch_insert(message)
+            try:
+                messageDAO.batch_insert(message)
+            except:
+                print('there was an insert error')
             count += 1
             if count % 100 == 0:
                 print(count)
-            if count > 5000:
-                break
+            if count % 5000 == 0:
+                messageDAO.batch_commit()
+                print('commit')
+            #if count > 100:
+            #    break
         messageDAO.batch_commit()
+
 
     def add_handles_to_db(self, username):
         self.cur.execute("select ROWID, id, service from handle")
         handle_dao = HandleDAO()
         service_look_up_dao = ServiceLookUpDAO()
         handle_columns = []
+        print('starting handles')
         for rows in self.cur.fetchall():
             handle_columns.append([str(rows[0]), str(rows[1]), str(rows[2])])
         for rows in handle_columns:

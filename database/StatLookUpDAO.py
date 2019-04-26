@@ -25,3 +25,6 @@ class StatLookUpDAO(DAO):
         statLookup = StatLookup()
         statLookup.set_values_from_row(rows)
         return statLookup
+
+    def select_general_stats(self):
+        command_string = "SELECT * FROM STAT_LOOKUP WHERE STAT_ID = " + str(stat_id)

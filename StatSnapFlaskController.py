@@ -104,10 +104,10 @@ def generate_data(dao):
     dao.batch_commit_stat_expanded()
 
 
-
 @app.route('/')
 def root():
     return redirect(url_for('login'))
+
 
 @app.route('/index', methods = ['GET', 'POST'])
 def index():
@@ -116,6 +116,7 @@ def index():
     elif request.method=='GET':
         list_of_messages = get_all_user_messages(str(session['username']))
         return render_template('index.html',**locals())
+
 
 def get_data_from_stats(list_of_stats):
     list_of_data_obj=[]
@@ -130,21 +131,25 @@ def get_data_from_stats(list_of_stats):
 
     return list_of_data_obj
 
+
 def get_list_of_occurences(stat_id):
     expanded_data_dao=ExpandedDataDAO()
     list_of_expanded_data=expanded_data_dao.select(stat_id)
     return list_of_expanded_data
 
+
 def get_all_user_messages(user_id):
     message_dao = MessageDAO()
     return message_dao.select_all_users_messages(user_id)
+
 
 def get_stat_id(handle_id):
     stat_id_dao = StatIdDAO()
     list_of_stat_id = stat_id_dao.select_all(handle_id)
     return list_of_stat_id
 
-@app.route('/upload_file', methods = ['GET', 'POST'])
+
+@app.route('/upload_file', methods=['GET', 'POST'])
 def upload_file():
     msg = 'Please select a valid file.'
     if request.method == 'GET':
@@ -167,7 +172,8 @@ def upload_file():
             flash(msg)
             return render_template("UploadFile.html",**locals())
 
-@app.route('/login', methods = ['GET', 'POST'])
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         if isValid(request.form['username'], request.form['password']):
@@ -175,10 +181,10 @@ def login():
             if not get_stat_id(session['username']):
                 return redirect(url_for('upload_file'))
             else:
-                return redirect(url_for('index'))
-
+                return redirect(url_for('general_charts'))
 
     return render_template("login.html")
+
 
 @app.route('/create_account', methods = ['GET', 'POST'])
 def create_account():
@@ -191,15 +197,15 @@ def create_account():
 
     return render_template("create_account.html")
 
-@app.route('/testhandlecharts', methods=['GET','POST'])
-def test_handle_charts(handle=0):
+
+@app.route('/handle_charts', methods=['GET','POST'])
+def handle_charts(handle=0):
     if request.method == 'POST':
-        print(request.form['handle_selector'])
-        print('POST')
         handle = request.form['handle_selector']
     # for testing
-    print('were running')
-    session['username'] = 'dsmolinski'
+    # session['username'] = 'dsmolinski'
+
+    # get data from DAOS
     stats_dao = StatIdStatLookUpExpandedDataDAO()
     list_of_stats = stats_dao.return_expanded_data_stats(str(session['username']))
     list_of_other_stats = stats_dao.return_all_none_stats(str(session['username']))
@@ -225,26 +231,19 @@ def test_handle_charts(handle=0):
 
     list_of_stats_filtered = list()
     list_of_other_stats_filtered = list()
-    print('FUCK')
     for x in range(len(list_of_stats)):
-        #print(list_of_stats[x][2])
         if list_of_stats[x][2] == str(handle):
-            print(list_of_stats[x])
             list_of_stats_filtered.append(list_of_stats[x])
-    print('SHIT')
     for x in range(len(list_of_other_stats)):
         if list_of_other_stats[x][2] == str(handle):
-            print(list_of_other_stats[x])
             list_of_other_stats_filtered.append(list_of_other_stats[x])
-    print('BALLS')
+
     # Texts over time setup
     texts_over_time = list()
     for x in range(len(list_of_stats_filtered)):
         if list_of_stats_filtered[x][3] == 'Texts Over Time - Handle':
             texts_over_time.append([list_of_stats_filtered[x][4], list_of_stats_filtered[x][5]])
     num_datapoints_tot = len(texts_over_time)
-    for x in range(num_datapoints_tot):
-        print(texts_over_time[x])
 
     fav_words_not_from_me_labels = list()
     fav_words_not_from_me_data = list()
@@ -263,9 +262,7 @@ def test_handle_charts(handle=0):
     profane_sent = 0
     profane_rec = 0
     for x in range(len(list_of_other_stats_filtered)):
-        print(list_of_other_stats_filtered[x][4:])
         if list_of_other_stats_filtered[x][4] == 'Total Occurrences of Profane Language - Handle':
-            print('found')
             total_profane_lang = int(list_of_other_stats_filtered[x][5])
         if list_of_other_stats_filtered[x][4] == 'Total Occurrences of Profane Language - Handle Not From Me':
             profane_rec = int(list_of_other_stats_filtered[x][5])
@@ -283,7 +280,7 @@ def test_handle_charts(handle=0):
         if list_of_other_stats_filtered[x][4] == 'Date of First Text - Handle':
             date_of_first_text = str(list_of_other_stats_filtered[x][5])
 
-        # longest/Shortest Message received
+    # longest/Shortest Message received
         shortest_message = ''
         longest_message = ''
         for x in range(len(list_of_other_stats_filtered)):
@@ -291,25 +288,18 @@ def test_handle_charts(handle=0):
                 shortest_message = str(list_of_other_stats_filtered[x][5])
             if list_of_other_stats_filtered[x][4] == 'Longest Message - Handle':
                 longest_message = str(list_of_other_stats_filtered[x][5])
-    for stat in list_of_other_stats_filtered:
-        print(stat)
+
     return render_template('handle_charts.html', **locals())
 
 
-@app.route('/testcharts', methods=['GET', 'POST'])
-def test_charts():
-    session['username'] = 'dsmolinski'
+@app.route('/general_charts', methods=['GET', 'POST'])
+def general_charts():
+    # for testing
+    # session['username'] = 'dsmolinski'
     stats_dao = StatIdStatLookUpExpandedDataDAO()
     list_of_stats = stats_dao.return_expanded_data_stats(str(session['username']))
-    #print(len(list_of_stats))
-    #print("########")
-    #for x in range(len(list_of_stats)):
-    #    print(list_of_stats[x])
-    #print("########")
+
     list_of_other_stats = stats_dao.return_all_none_stats(str(session['username']))
-   # for x in range(len(list_of_other_stats)):
-   #     print(list_of_other_stats[x])
-   # print("########")
 
     # this is hands down the worst unmaintainable hardcoded garbage code I have ever written lmao
     # favorite words not from me
@@ -349,7 +339,8 @@ def test_charts():
         if list_of_stats[x][3] == 'Texts Over Time - General From Me':
             texts_over_time_sent.append([list_of_stats[x][4], list_of_stats[x][5]])
     num_datapoints_tot = len(texts_over_time)
-
+    num_datapoints_sent = len(texts_over_time_sent)
+    num_datapoints_rec = len(texts_over_time_rec)
 
     # days with most text
     day_with_most_texts_general = 0
@@ -387,7 +378,6 @@ def test_charts():
     most_freq_spoken_to = 'Not Found'
     for x in range(len(list_of_other_stats)):
         if list_of_other_stats[x][4] == 'Most Frequently Spoken To - General':
-            print('Most Frequently Spoken To - General')
             most_freq_spoken_general = str(list_of_other_stats[x][5])
         if list_of_other_stats[x][4] == 'Most Messages From - General':
             most_freq_spoken_from = str(list_of_other_stats[x][5])
@@ -412,12 +402,11 @@ def test_charts():
         if list_of_other_stats[x][4] == 'Longest Message - General':
             longest_message = str(list_of_other_stats[x][5])
 
-
     return render_template("charts.html", **locals())
 
 
 @app.route('/faq', methods=['GET'])
-def charts():
+def faq():
     return render_template("faq.html")
 
 

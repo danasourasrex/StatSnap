@@ -19,7 +19,10 @@
             <a id="logo-container" href="#" class="brand-logo">
             <img src="{{ url_for('static', filename = 'statsnap.png') }}" width="260px" alt="Statsnap Logo"></a>
             <ul class="right hide-on-med-and-down">
-               <li><a class="black-text" href="#">FAQ</a></li>
+                <li><a class="black-text" href="#">General Stats</a></li>
+                <li><a class="black-text" href="/handle_charts">Handle Stats</a></li>
+                <li><a class="black-text" href="/faq">FAQ</a></li>
+                <li><a class="black-text" href="#">{{session['username']}}</a></li>
             </ul>
             <ul id="nav-mobile" class="sidenav">
                <li><a href="#">Navbar Link</a></li>
@@ -27,7 +30,7 @@
             <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
          </div>
 </nav>
-
+<div id="base">
 <h1 class = "center thin">Statistics</h1>
 <div class = "container z-depth-1">
 
@@ -156,6 +159,7 @@
     </div>
 </div>
 </div>
+    </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script>
@@ -206,12 +210,12 @@ var chart = new Chart(ctx, {
             {
             label: 'Messages Sent Over Time',
             borderColor: 'rgb(49, 255, 90)',
-            data: [{% for x in range(num_datapoints_tot)%} {{texts_over_time_sent[x][1]}},{%endfor%}]
+            data: [{% for x in range(num_datapoints_sent)%} {{texts_over_time_sent[x][1]}},{%endfor%}]
         },
     {
             label: 'Messages Received Over Time',
             borderColor: 'rgb(255, 38, 90)',
-            data: [{% for x in range(num_datapoints_tot)%} {{texts_over_time_rec[x][1]}},{%endfor%}]
+            data: [{% for x in range(num_datapoints_rec)%} {{texts_over_time_rec[x][1]}},{%endfor%}]
         },
     {
             label: 'Messages Over Time',
@@ -246,21 +250,21 @@ new Chart(document.getElementById("sent_vs_rec"), {
     }
 });
 </script>
-<footer class="page-footer blue darken-4">
+<footer class="page-footer grey lighten-3">
          <div class="container">
             <div class="row">
                <div class="col s12">
-                  <h5 class="white-text">About us</h5>
-                  <p class="grey-text text-lighten-4">Developers: <b>Theo Slepski</b>, <b>Daniel Smolinski</b>, <b>Michael Wojtyna</b></p>
+                  <h5 class="black-text thin">About us</h5>
+                  <p class="black-text thin">Developers: Theo Slepski, Daniel Smolinski, Michael Wojtyna</p>
 
-                   <p>Three senior computer science majors attending Stonehill College. This was our final project for CSC - 325 Database Management Systems.</p>
+                   <p class="black-text thin">Three senior computer science majors attending Stonehill College. This was our final project for CSC - 325 Database Management Systems.</p>
                </div>
             </div>
          </div>
          <div class="footer-copyright">
             <div class="container">
-               <p class = "grey-text text-lighten-4 left">2019</p>
-               <p class="grey-text text-lighten-4 right">CSC-325</p>
+               <p class = "black-text thin left">2019</p>
+               <p class="black-text thin right">CSC-325</p>
             </div>
          </div>
       </footer>
