@@ -14,23 +14,27 @@
     <script src="jquery-3.3.1.min.js"></script>
    </head>
 <body class = "grey lighten-4">
-<nav class="grey lighten-3" role="navigation">
-         <div class="nav-wrapper container">
+
+<div id="base">
+    <nav class="grey lighten-3" role="navigation">
+    <div class="nav-wrapper container">
             <a id="logo-container" href="#" class="brand-logo">
             <img src="{{ url_for('static', filename = 'statsnap.png') }}" width="260px" alt="Statsnap Logo"></a>
-            <ul class="right hide-on-med-and-down">
-                <li><a class="black-text" href="#">General Stats</a></li>
-                <li><a class="black-text" href="/handle_charts">Handle Stats</a></li>
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons black-text">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+                <li class="grey lighten-2"><a class="black-text" href="#">General Stats</a></li>
+                <li><a class="black-text" href="/handle_charts" onclick='newwin()'>Handle Stats</a></li>
                 <li><a class="black-text" href="/faq">FAQ</a></li>
                 <li><a class="black-text" href="#">{{session['username']}}</a></li>
-            </ul>
-            <ul id="nav-mobile" class="sidenav">
-               <li><a href="#">Navbar Link</a></li>
-            </ul>
-            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-         </div>
-</nav>
-<div id="base">
+      </ul>
+    </div>
+  </nav>
+
+  <ul class="sidenav" id="mobile-demo">
+                <li><a class="black-text" href="#">General Stats</a></li>
+                <li><a class="black-text" href="/handle_charts" onclick='newwin()'>Handle Stats</a></li>
+                <li><a class="black-text grey-lighten-2" href="/faq">FAQ</a></li>
+  </ul>
 <h1 class = "center thin">Statistics</h1>
 <div class = "container z-depth-1">
 
@@ -160,8 +164,94 @@
 </div>
 </div>
     </div>
+<style>
+       .spinner {
+  margin: 100px auto;
+  width: 50px;
+  height: 40px;
+  text-align: center;
+  font-size: 10px;
+}
 
+.spinner > div {
+  background-color: #333;
+  height: 100%;
+  width: 6px;
+  display: inline-block;
+
+  -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
+  animation: sk-stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+}
+
+@-webkit-keyframes sk-stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
+  20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes sk-stretchdelay {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }  20% {
+    transform: scaleY(1.0);
+    -webkit-transform: scaleY(1.0);
+  }
+}
+   </style>
+   <div id ='hidden' style="display:none;height: 100%;width:100%;">
+        <h1 class = "center thin">please be patient</h1>
+       <h3 class = "center thin">this might take a while...</h3>
+       <div class="spinner">
+  <div class="rect1"></div>
+  <div class="rect2"></div>
+  <div class="rect3"></div>
+  <div class="rect4"></div>
+  <div class="rect5"></div>
+</div></div>
+   <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+   <script type="text/javascript">
+document.getElementById('form').addEventListener('submit', function(evt){
+    document.getElementById('hidden').style.display = "block";
+    document.getElementById('base').style.display = "none";
+    document.getElementById('base2').style.display="none";
+
+})
+   </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+<script>
+    function newwin() {
+        document.getElementById('hidden').style.display = "block";
+        document.getElementById('base').style.display = "none";
+        document.getElementById('base2').style.display="none";
+}
+</script>
+<script>
+  $(document).ready(function(){
+    $('.sidenav').sidenav();
+  });
+</script>
 <script>
     new Chart(document.getElementById("5favorite_words_nfm"), {
     type: 'doughnut',
@@ -250,6 +340,7 @@ new Chart(document.getElementById("sent_vs_rec"), {
     }
 });
 </script>
+<div id="base2">
 <footer class="page-footer grey lighten-3">
          <div class="container">
             <div class="row">
@@ -268,5 +359,6 @@ new Chart(document.getElementById("sent_vs_rec"), {
             </div>
          </div>
       </footer>
+    </div>
 </body>
 </html>

@@ -201,7 +201,9 @@ def create_account():
 @app.route('/handle_charts', methods=['GET','POST'])
 def handle_charts(handle=0):
     if request.method == 'POST':
-        handle = request.form['handle_selector']
+        handle = request.form['handles']
+    else:
+        handle = 1
     # for testing
     # session['username'] = 'dsmolinski'
 
@@ -209,6 +211,14 @@ def handle_charts(handle=0):
     stats_dao = StatIdStatLookUpExpandedDataDAO()
     list_of_stats = stats_dao.return_expanded_data_stats(str(session['username']))
     list_of_other_stats = stats_dao.return_all_none_stats(str(session['username']))
+    handle_dao = HandleDAO()
+    handles_and_nums = handle_dao.select_all_distinct_handles_for_user(str(session['username']))
+
+    phone_num = ''
+    for nums in handles_and_nums:
+        if int(nums[0]) == int(handle):
+            phone_num = nums[1]
+            break
 
     # get distinct handles
     unique_handles = list()
@@ -420,4 +430,5 @@ def isValid(username,password):
 
 
 if __name__ == "__main__":
-    app.run()
+    # app.run()
+    app.run(host='0.0.0.0', port=5000)

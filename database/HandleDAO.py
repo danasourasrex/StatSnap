@@ -51,5 +51,13 @@ class HandleDAO(DAO):
             distinct_handle_ids.append(str(rows[0]))
         return distinct_handle_ids
 
+    def select_all_distinct_handles_for_user(self, key):
+        command_string = "SELECT HANDLE_ID, PHONE_NUMBER FROM HANDLE WHERE USER_ID = \'" + str(key) + "\' order by HANDLE_ID"
+        print(command_string)
+        self.cur.execute(command_string)
+        distinct_handle_ids = []
+        for rows in self.cur.fetchall():
+            distinct_handle_ids.append([str(rows[0]), str(rows[1])])
+        return distinct_handle_ids
 
 
