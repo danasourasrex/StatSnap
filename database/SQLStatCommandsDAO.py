@@ -343,7 +343,7 @@ class SQLStatCommandsDAO(DAO):
         command_string = "select PHONE_NUMBER from HANDLE where USER_ID = '" + str(
             self.username) + "' AND HANDLE_ID = (select HANDLE_ID from (select HANDLE_ID, count(HANDLE_ID) as occurance from message where USER_ID = '" + str(
             self.username) + "' AND IS_FROM_ME = 1 group by HANDLE_ID order by count(HANDLE_ID) desc) where occurance = (select max(occurance) as most_messages from (select HANDLE_ID, count(HANDLE_ID) as occurance from message where USER_ID = '" + str(
-            self.username) + "' AND IS_FROM_ME = 1 group by HANDLE_ID order by count(HANDLE_ID) desc)))"
+            self.username) + "' AND IS_FROM_ME = 1 AND HANDLE_ID != 0 group by HANDLE_ID order by count(HANDLE_ID) desc)))"
         try:
             self.cur.execute(command_string)
 
